@@ -17,6 +17,7 @@ import {
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import Avatar from '../components/ui/Avatar';
 import LecturerModal from '../components/lecturer/LecturerModal';
 import Modal from '../components/ui/Modal';
 import { maskPhoneNumber, formatPhoneNumber } from '../utils/phoneUtils';
@@ -168,10 +169,11 @@ export default function Lecturer() {
                     <tr key={lec.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
                       <td className="py-4 px-4 sm:px-6">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={lec.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                            alt={lec.name}
-                            className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
+                          <Avatar
+                            src={lec.avatar}
+                            name={lec.name}
+                            size="sm"
+                            status={lec.status}
                           />
                           <div>
                             <div className="font-bold text-slate-900 dark:text-white leading-tight">
@@ -270,10 +272,12 @@ export default function Lecturer() {
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <img
-                        src={lec.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                        alt={lec.name}
-                        className="w-12 h-12 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-slate-800"
+                      <Avatar
+                        src={lec.avatar}
+                        name={lec.name}
+                        size="md"
+                        rounded="rounded-2xl"
+                        status={lec.status}
                       />
                       <div>
                         <h4 className="font-bold text-slate-900 dark:text-white leading-snug">
@@ -371,10 +375,12 @@ export default function Lecturer() {
         >
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <img
-                src={viewingLecturer.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-                alt={viewingLecturer.name}
-                className="w-16 h-16 rounded-2xl object-cover ring-2 ring-indigo-500/20"
+              <Avatar
+                src={viewingLecturer.avatar}
+                name={viewingLecturer.name}
+                size="xl"
+                rounded="rounded-2xl"
+                status={viewingLecturer.status}
               />
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">

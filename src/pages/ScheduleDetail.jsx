@@ -20,6 +20,7 @@ import {
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import Avatar from '../components/ui/Avatar';
 import Modal from '../components/ui/Modal';
 import ScheduleModal from '../components/schedule/ScheduleModal';
 import { formatIndonesianDate, formatScheduledTimestamp } from '../utils/dateUtils';
@@ -168,10 +169,12 @@ export default function ScheduleDetail() {
         {/* Lecturer Details & WhatsApp info */}
         <div className="p-5 rounded-2xl bg-indigo-50/50 dark:bg-slate-800/40 border border-indigo-100/70 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <img
-              src={lecturer?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}
-              alt={lecturer?.name}
-              className="w-12 h-12 rounded-xl object-cover ring-2 ring-indigo-500/20"
+            <Avatar
+              src={lecturer?.avatar}
+              name={lecturer?.name}
+              size="md"
+              rounded="rounded-xl"
+              status={lecturer?.status}
             />
             <div>
               <div className="text-xs text-slate-400 font-medium">Dosen Pengampu</div>

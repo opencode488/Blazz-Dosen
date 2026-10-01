@@ -190,7 +190,26 @@ export function DataProvider({ children }) {
   // 3. Data state loaded from localStorage with initial fallbacks (all empty by default)
   const [lecturers, setLecturers] = useState(() => {
     const saved = localStorage.getItem('dosen_lecturers');
-    return saved ? JSON.parse(saved) : INITIAL_LECTURERS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        let changed = false;
+        const cleaned = parsed.map((lec) => {
+          if (lec.avatar && typeof lec.avatar === 'string' && lec.avatar.includes('photo-1534528741775-53994a69daeb')) {
+            changed = true;
+            return { ...lec, avatar: '' };
+          }
+          return lec;
+        });
+        if (changed) {
+          localStorage.setItem('dosen_lecturers', JSON.stringify(cleaned));
+        }
+        return cleaned;
+      } catch {
+        // ignore parse error
+      }
+    }
+    return INITIAL_LECTURERS;
   });
 
   const [courses, setCourses] = useState(() => {
