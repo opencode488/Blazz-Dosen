@@ -18,7 +18,10 @@ import {
   Code,
   Copy,
   ExternalLink,
-  AlertCircle
+  AlertCircle,
+  QrCode,
+  Smartphone,
+  LogOut
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useTheme } from '../context/ThemeContext';
@@ -158,7 +161,12 @@ export default function Settings() {
     syncWithSupabase,
     configureSupabase,
     clearAllData,
-    isLoadingDb
+    isLoadingDb,
+    whatsAppStatus,
+    openWaModal,
+    connectWhatsApp,
+    disconnectWhatsApp,
+    refreshWhatsAppStatus
   } = useData();
   const { isDark, toggleTheme } = useTheme();
   const { user } = useAuth();
@@ -379,36 +387,139 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* WhatsApp & Scheduler Configuration */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-2.5">
-              <Server className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+        {/* WhatsApp Web Multi-Device & Barcode Scan Integration */}
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                <Smartphone className="w-5 h-5" />
+              </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Integrasi WhatsApp API & Cron Scheduler
+                  Koneksi WhatsApp Web (Scan Barcode)
                 </h3>
-                <p className="text-xs text-slate-400">Timezone resmi: Asia/Jakarta (WIB)</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Tautkan WhatsApp Anda via barcode untuk pengiriman pesan otomatis langsung
+                </p>
               </div>
             </div>
-            <Badge variant="success" dot>
-              Connected
-            </Badge>
+
+            <div className="flex items-center gap-2">
+              {whatsAppStatus.isConnected ? (
+                <Badge variant="success" dot>
+                  Terhubung: +{whatsAppStatus.user?.phone || 'WA Aktif'}
+                </Badge>
+              ) : whatsAppStatus.status === 'qr_ready' ? (
+                <Badge variant="warning" dot>
+                  Siap Di-Scan
+                </Badge>
+              ) : (
+                <Badge variant="default">
+                  Belum Terhubung
+                </Badge>
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Connected state info or QR code preview */}
+          {whatsAppStatus.isConnected ? (
+            <div className="p-5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-sm font-bold text-emerald-900 dark:text-emerald-200">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  Sesi WhatsApp Aktif & Siap Digunakan
+                </div>
+                <p className="text-xs text-emerald-700 dark:text-emerald-300">
+                  Terhubung ke: <strong className="font-mono">+{whatsAppStatus.user?.phone}</strong> ({whatsAppStatus.user?.name || 'WhatsApp Web'})
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  icon={QrCode}
+                  onClick={openWaModal}
+                >
+                  Uji Coba Kirim
+                </Button>
+                <Button
+                  type="button"
+                  variant="danger"
+                  size="sm"
+                  icon={LogOut}
+                  onClick={disconnectWhatsApp}
+                >
+                  Putuskan
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/60 flex flex-col md:flex-row items-center gap-6">
+              {whatsAppStatus.qrCode ? (
+                <div className="shrink-0 p-3 bg-white rounded-2xl shadow-sm border border-slate-200 text-center">
+                  <img
+                    src={whatsAppStatus.qrCode}
+                    alt="Barcode WhatsApp"
+                    className="w-40 h-40 object-contain mx-auto"
+                  />
+                  <span className="block mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-500">
+                    Arahkan kamera WA ke sini
+                  </span>
+                </div>
+              ) : (
+                <div className="w-40 h-40 shrink-0 flex flex-col items-center justify-center p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl text-center">
+                  <QrCode className="w-8 h-8 text-slate-400 mb-1" />
+                  <p className="text-[11px] text-slate-400">Barcode belum dimuat</p>
+                </div>
+              )}
+
+              <div className="flex-1 space-y-3 text-center sm:text-left">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  Tautkan Nomor WhatsApp dengan Mudah
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Buka WhatsApp di HP &rarr; Menu titik tiga (⋮) / Pengaturan &rarr; <strong>Perangkat Tertaut</strong> &rarr; <strong>Tautkan Perangkat</strong> &rarr; scan barcode di samping.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    icon={QrCode}
+                    onClick={openWaModal}
+                  >
+                    Buka Tampilan Barcode Penuh
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    icon={RefreshCw}
+                    onClick={() => connectWhatsApp(true)}
+                  >
+                    Barcode Baru
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5">
-                WhatsApp Provider
+                Metode Pengiriman WhatsApp
               </label>
               <input
                 type="text"
                 disabled
-                value={formData.whatsappProvider}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 text-sm px-3.5 py-2.5 cursor-not-allowed"
+                value="WhatsApp Web Multi-Device (Scan QR)"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 text-sm px-3.5 py-2.5 cursor-not-allowed font-medium"
               />
               <p className="text-[11px] text-slate-400 mt-1">
-                Menggunakan WhatsApp Business Platform resmi (bukan web scraper).
+                Koneksi WebSocket langsung via Baileys multi-device.
               </p>
             </div>
 
@@ -426,17 +537,6 @@ export default function Settings() {
                 Pesan otomatis selalu dijadwalkan H-1 pukul 08.00 WIB.
               </p>
             </div>
-          </div>
-
-          {/* Security Notice */}
-          <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40 text-xs text-amber-800 dark:text-amber-300 space-y-1">
-            <div className="flex items-center gap-1.5 font-bold">
-              <KeyRound className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              Keamanan Kredensial (.env Backend)
-            </div>
-            <p className="leading-relaxed">
-              Sesuai spesifikasi, WhatsApp API Token, Database Service Role Key, dan AI API Key tidak pernah disimpan di bundle frontend. Frontend hanya berkomunikasi melalui backend Express API atau Supabase Anon Key terproteksi RLS.
-            </p>
           </div>
         </div>
 

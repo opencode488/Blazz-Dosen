@@ -11,7 +11,8 @@ import {
   Bot,
   ArrowRight,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  QrCode
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
@@ -25,7 +26,7 @@ import { maskPhoneNumber } from '../utils/phoneUtils';
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { lecturers, courses, schedules, automations } = useData();
+  const { lecturers, courses, schedules, automations, whatsAppStatus, openWaModal } = useData();
 
   // Calculate statistics
   const totalLecturers = lecturers.length;
@@ -87,6 +88,58 @@ export default function Dashboard() {
         {/* Decorative background glow */}
         <div className="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-white/10 blur-2xl pointer-events-none" />
       </div>
+
+      {/* WhatsApp Web Status Banner */}
+      {!whatsAppStatus.isConnected ? (
+        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-200 dark:border-amber-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 shadow-inner">
+              <QrCode className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  Tautkan WhatsApp Web Anda
+                </h4>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                  Perlu Scan Barcode
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Scan barcode langsung dari website agar pesan pengingat jadwal kuliah dapat terkirim otomatis.
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            icon={QrCode}
+            onClick={openWaModal}
+            className="shrink-0 font-semibold"
+          >
+            Scan Barcode Sekarang
+          </Button>
+        </div>
+      ) : (
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-emerald-900 dark:text-emerald-200">
+              WhatsApp Web Aktif:
+            </span>
+            <span className="font-mono text-emerald-800 dark:text-emerald-300">
+              +{whatsAppStatus.user?.phone} ({whatsAppStatus.user?.name || 'WA User'})
+            </span>
+          </div>
+          <button
+            onClick={openWaModal}
+            className="text-xs text-emerald-700 dark:text-emerald-400 font-semibold hover:underline cursor-pointer text-left sm:text-right"
+          >
+            Kelola / Uji Coba Kirim &rarr;
+          </button>
+        </div>
+      )}
 
       {/* 6 Statistic Cards */}
       <div>

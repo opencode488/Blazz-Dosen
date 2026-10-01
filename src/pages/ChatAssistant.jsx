@@ -23,7 +23,17 @@ import { formatPhoneNumber } from '../utils/phoneUtils';
 
 export default function ChatAssistant() {
   const [searchParams] = useSearchParams();
-  const { lecturers, courses, schedules, generateAiDraft, sendManualChat, addToast, addSchedule } = useData();
+  const {
+    lecturers,
+    courses,
+    schedules,
+    generateAiDraft,
+    sendManualChat,
+    addToast,
+    addSchedule,
+    whatsAppStatus,
+    openWaModal
+  } = useData();
 
   // Selected context
   const [selectedLecturerId, setSelectedLecturerId] = useState(
@@ -74,6 +84,11 @@ export default function ChatAssistant() {
 
   const handleSendNow = () => {
     if (!generatedDraft.trim()) return;
+    if (!whatsAppStatus.isConnected) {
+      addToast('WhatsApp Web belum terhubung! Silakan scan barcode terlebih dahulu.', 'warning');
+      openWaModal();
+      return;
+    }
     sendManualChat({
       lecturerId: selectedLecturerId,
       courseId: selectedCourseId,
@@ -292,12 +307,12 @@ export default function ChatAssistant() {
             </div>
 
             <Button
-              variant="success"
+              variant={whatsAppStatus.isConnected ? 'success' : 'primary'}
               size="sm"
               icon={Send}
               onClick={handleSendNow}
             >
-              Kirim via WhatsApp API
+              {whatsAppStatus.isConnected ? 'Kirim via WhatsApp Web' : 'Scan Barcode & Kirim'}
             </Button>
           </div>
         </div>

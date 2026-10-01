@@ -16,9 +16,9 @@ import {
 import { useData } from '../../context/DataContext';
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { automations } = useData();
+  const { automations = [] } = useData();
 
-  const scheduledCount = automations.filter((a) => a.status === 'scheduled').length;
+  const scheduledCount = automations?.filter((a) => a.status === 'scheduled')?.length || 0;
 
   const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },

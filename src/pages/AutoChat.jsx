@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   Trash2,
   RefreshCw,
-  ArrowRight
+  ArrowRight,
+  QrCode
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
@@ -29,7 +30,9 @@ export default function AutoChat() {
     schedules,
     cancelAutomation,
     rescheduleAutomation,
-    sendAutomationNow
+    sendAutomationNow,
+    whatsAppStatus,
+    openWaModal
   } = useData();
 
   const [activeTab, setActiveTab] = useState('scheduled'); // 'scheduled' | 'sent' | 'failed' | 'cancelled'
@@ -72,10 +75,29 @@ export default function AutoChat() {
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          <span>WhatsApp Cloud API Connected</span>
-        </div>
+        <button
+          onClick={openWaModal}
+          type="button"
+          className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition cursor-pointer ${
+            whatsAppStatus.isConnected
+              ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
+              : 'bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 hover:bg-amber-100 animate-pulse'
+          }`}
+          title="Klik untuk melihat status / scan barcode WhatsApp"
+        >
+          <QrCode className="w-3.5 h-3.5" />
+          {whatsAppStatus.isConnected ? (
+            <>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>WA Web: +{whatsAppStatus.user?.phone}</span>
+            </>
+          ) : (
+            <>
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <span>WA Web Belum Terhubung - Scan Barcode</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Tabs */}

@@ -26,8 +26,10 @@ import {
   mapChatHistoryToDb
 } from '../services/supabase';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
+import whatsappService from '../services/whatsappService';
+import WhatsAppModal from '../components/whatsapp/WhatsAppModal';
 
-const DataContext = createContext();
+const DataContext = createContext({});
 
 // Ensure previous dummy data is purged from localStorage on first run
 const cleanLegacyDummyData = () => {
@@ -119,6 +121,71 @@ export function DataProvider({ children }) {
     errorMessage: null
   });
   const [isLoadingDb, setIsLoadingDb] = useState(false);
+
+  // 2b. WhatsApp Web Integration State (Multi-Device / QR Code Scan)
+  const [whatsAppStatus, setWhatsAppStatus] = useState({
+    status: 'disconnected',
+    qrCode: null,
+    user: null,
+    isConnected: false
+  });
+  const [isWaModalOpen, setIsWaModalOpen] = useState(false);
+
+  const refreshWhatsAppStatus = useCallback(async () => {
+    try {
+      const res = await whatsappService.getStatus();
+      if (res) {
+        setWhatsAppStatus(res);
+      }
+      return res;
+    } catch (e) {
+      console.warn('Gagal refresh status WhatsApp:', e);
+    }
+  }, []);
+
+  const connectWhatsApp = async (forceFresh = false) => {
+    try {
+      const res = await whatsappService.connect(forceFresh);
+      setWhatsAppStatus(res);
+      return res;
+    } catch (err) {
+      console.error('Error connect WhatsApp:', err);
+      throw err;
+    }
+  };
+
+  const disconnectWhatsApp = async () => {
+    try {
+      const res = await whatsappService.disconnect();
+      setWhatsAppStatus({
+        status: 'disconnected',
+        qrCode: null,
+        user: null,
+        isConnected: false
+      });
+      return res;
+    } catch (err) {
+      console.error('Error disconnect WhatsApp:', err);
+      throw err;
+    }
+  };
+
+  const sendTestWhatsApp = async (phone, message) => {
+    return whatsappService.sendMessage({ to: phone, message });
+  };
+
+  const openWaModal = () => setIsWaModalOpen(true);
+  const closeWaModal = () => setIsWaModalOpen(false);
+
+  // Periodically check WhatsApp status
+  useEffect(() => {
+    refreshWhatsAppStatus();
+    const intervalTime = (isWaModalOpen || whatsAppStatus.status === 'qr_ready' || whatsAppStatus.status === 'connecting') ? 3000 : 10000;
+    const interval = setInterval(() => {
+      refreshWhatsAppStatus();
+    }, intervalTime);
+    return () => clearInterval(interval);
+  }, [isWaModalOpen, whatsAppStatus.status, refreshWhatsAppStatus]);
 
   // 3. Data state loaded from localStorage with initial fallbacks (all empty by default)
   const [lecturers, setLecturers] = useState(() => {
@@ -703,6 +770,18 @@ export function DataProvider({ children }) {
     setChatHistory((prev) => [newHistory, ...prev]);
     addToast(`Pesan berhasil dikirim ke WhatsApp ${lec?.name || 'Dosen'}!`);
 
+    // Kirim pesan nyata melalui WhatsApp Web jika terhubung
+    if (whatsAppStatus.isConnected) {
+      whatsappService.sendMessage({ to: target.phoneNumber, message: target.message })
+        .then(() => {
+          console.log('[AutoChat] Pesan nyata WhatsApp berhasil terkirim!');
+        })
+        .catch((err) => {
+          console.warn('[AutoChat] Gagal mengirim pesan nyata via WhatsApp Web:', err.message);
+          addToast(`Peringatan WhatsApp Web: ${err.message}`, 'warning');
+        });
+    }
+
     const client = getSupabase();
     if (client && isSupabaseConfigured()) {
       try {
@@ -806,6 +885,18 @@ export function DataProvider({ children }) {
     setChatHistory((prev) => [newHistory, ...prev]);
     addToast(`Pesan berhasil dikirim ke WhatsApp ${lec?.name || 'Dosen'}!`);
 
+    // Kirim pesan nyata melalui WhatsApp Web jika terhubung
+    if (whatsAppStatus.isConnected) {
+      whatsappService.sendMessage({ to: lec?.phone, message })
+        .then(() => {
+          console.log('[ManualChat] Pesan nyata WhatsApp berhasil terkirim!');
+        })
+        .catch((err) => {
+          console.warn('[ManualChat] Gagal mengirim pesan nyata via WhatsApp Web:', err.message);
+          addToast(`Peringatan WhatsApp Web: ${err.message}`, 'warning');
+        });
+    }
+
     const client = getSupabase();
     if (client && isSupabaseConfigured()) {
       try {
@@ -868,6 +959,16 @@ export function DataProvider({ children }) {
         configureSupabase,
         clearAllData,
 
+        // WhatsApp Integration State & Actions
+        whatsAppStatus,
+        isWaModalOpen,
+        openWaModal,
+        closeWaModal,
+        refreshWhatsAppStatus,
+        connectWhatsApp,
+        disconnectWhatsApp,
+        sendTestWhatsApp,
+
         // Actions
         addLecturer,
         updateLecturer,
@@ -891,8 +992,9 @@ export function DataProvider({ children }) {
     >
       {children}
       <ConfirmDialog {...confirmDialog} onClose={closeConfirm} />
+      <WhatsAppModal isOpen={isWaModalOpen} onClose={closeWaModal} />
     </DataContext.Provider>
   );
 }
 
-export const useData = () => useContext(DataContext);
+export const useData = () => useContext(DataContext) || {};
