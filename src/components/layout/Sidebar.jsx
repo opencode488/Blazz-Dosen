@@ -100,15 +100,15 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {/* Auto Chat Indicator Box */}
       <div className="p-4 border-t border-slate-100 dark:border-slate-800">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-50 to-slate-50 dark:from-slate-800/60 dark:to-slate-800/30 border border-indigo-100 dark:border-slate-700/60">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+        <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-50/80 to-slate-50 dark:from-slate-800/60 dark:to-slate-900 border border-indigo-100/80 dark:border-slate-800">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
               Auto Chat H-1 Aktif
             </span>
           </div>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-            Pesan terjadwal H-1 pukul 08.00 WIB dikirim via WhatsApp API.
+            Pengingat otomatis H-1 pukul 08.00 WIB via WhatsApp Web.
           </p>
         </div>
       </div>
