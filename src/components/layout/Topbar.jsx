@@ -7,7 +7,7 @@ import { useData } from '../../context/DataContext';
 export default function Topbar({ onMenuClick, title }) {
   const { isDark, toggleTheme } = useTheme();
   const { user } = useAuth();
-  const { clearAllData, supabaseStatus } = useData();
+  const { clearAllData, supabaseStatus, openConfirm } = useData();
 
   return (
     <header className="sticky top-0 z-20 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-6 flex items-center justify-between">
@@ -55,9 +55,15 @@ export default function Topbar({ onMenuClick, title }) {
         {/* Clear database action button */}
         <button
           onClick={() => {
-            if (window.confirm('Kosongkan semua data dosen, mata kuliah, jadwal, dan chat di database?')) {
-              clearAllData();
-            }
+            openConfirm({
+              title: 'Kosongkan Semua Data?',
+              message: 'Tindakan ini akan mengosongkan seluruh data dosen, mata kuliah, jadwal kuliah, dan antrean pesan WhatsApp.',
+              note: 'Data di database Supabase dan penyimpanan lokal akan dihapus secara permanen.',
+              confirmText: 'Ya, Kosongkan Semua',
+              cancelText: 'Batal',
+              variant: 'danger',
+              onConfirm: () => clearAllData()
+            });
           }}
           title="Kosongkan Semua Data Database"
           className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 rounded-xl transition cursor-pointer"

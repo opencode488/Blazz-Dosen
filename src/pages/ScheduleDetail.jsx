@@ -34,7 +34,8 @@ export default function ScheduleDetail() {
     lecturers,
     automations,
     deleteSchedule,
-    cancelAutomation
+    cancelAutomation,
+    openConfirm
   } = useData();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -63,16 +64,31 @@ export default function ScheduleDetail() {
   const linkedAutomation = automations.find((a) => a.scheduleId === schedule.id);
 
   const handleDelete = () => {
-    if (window.confirm(`Hapus jadwal "${course?.name}"? Pesan otomatis terkait akan dibatalkan.`)) {
-      deleteSchedule(schedule.id);
-      navigate('/schedule');
-    }
+    openConfirm({
+      title: 'Hapus Jadwal Kuliah',
+      message: 'Hapus jadwal perkuliahan ini dari kalender dan database?',
+      itemName: course?.name,
+      note: 'Pesan otomatis pengingat WhatsApp terkait juga akan dibatalkan.',
+      confirmText: 'Ya, Hapus Jadwal',
+      variant: 'danger',
+      onConfirm: () => {
+        deleteSchedule(schedule.id);
+        navigate('/schedule');
+      }
+    });
   };
 
   const handleCancelAutoChat = () => {
-    if (linkedAutomation && window.confirm('Batalkan pengiriman pesan pengingat WhatsApp ini?')) {
-      cancelAutomation(linkedAutomation.id);
-    }
+    if (!linkedAutomation) return;
+    openConfirm({
+      title: 'Batalkan Pesan WhatsApp?',
+      message: 'Apakah Anda yakin ingin membatalkan jadwal pengiriman pesan otomatis ini?',
+      itemName: course?.name,
+      note: 'Status antrean akan diubah menjadi Dibatalkan.',
+      confirmText: 'Batalkan Pesan',
+      variant: 'warning',
+      onConfirm: () => cancelAutomation(linkedAutomation.id)
+    });
   };
 
   return (

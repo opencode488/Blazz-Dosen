@@ -23,7 +23,7 @@ import { maskPhoneNumber, formatPhoneNumber } from '../utils/phoneUtils';
 
 export default function Lecturer() {
   const navigate = useNavigate();
-  const { lecturers, addLecturer, updateLecturer, deleteLecturer } = useData();
+  const { lecturers, addLecturer, updateLecturer, deleteLecturer, openConfirm } = useData();
 
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
@@ -58,9 +58,15 @@ export default function Lecturer() {
   };
 
   const handleDelete = (id, name) => {
-    if (window.confirm(`Hapus data dosen ${name}? Jadwal terkait akan tetap tersimpan.`)) {
-      deleteLecturer(id);
-    }
+    openConfirm({
+      title: 'Hapus Data Dosen',
+      message: 'Apakah Anda yakin ingin menghapus data dosen ini dari sistem?',
+      itemName: name,
+      note: 'Jadwal perkuliahan yang telah terkait akan tetap tersimpan.',
+      confirmText: 'Hapus Dosen',
+      variant: 'danger',
+      onConfirm: () => deleteLecturer(id)
+    });
   };
 
   const handleFormSubmit = (data) => {

@@ -25,6 +25,7 @@ import {
   mapTemplateToDb,
   mapChatHistoryToDb
 } from '../services/supabase';
+import ConfirmDialog from '../components/ui/ConfirmDialog';
 
 const DataContext = createContext();
 
@@ -65,6 +66,49 @@ export function DataProvider({ children }) {
 
   const removeToast = (id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // 1b. Global Confirmation Dialog
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    itemName: null,
+    note: null,
+    confirmText: 'Ya, Lanjutkan',
+    cancelText: 'Batal',
+    variant: 'danger',
+    onConfirm: () => {}
+  });
+
+  const openConfirm = ({
+    title = 'Konfirmasi Tindakan',
+    message = 'Apakah Anda yakin ingin melanjutkan tindakan ini?',
+    itemName = null,
+    note = null,
+    confirmText = 'Ya, Lanjutkan',
+    cancelText = 'Batal',
+    variant = 'danger',
+    onConfirm = () => {}
+  }) => {
+    setConfirmDialog({
+      isOpen: true,
+      title,
+      message,
+      itemName,
+      note,
+      confirmText,
+      cancelText,
+      variant,
+      onConfirm: () => {
+        onConfirm();
+        setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
+      }
+    });
+  };
+
+  const closeConfirm = () => {
+    setConfirmDialog((prev) => ({ ...prev, isOpen: false }));
   };
 
   // 2. Supabase Integration State
@@ -841,10 +885,12 @@ export function DataProvider({ children }) {
         updateTemplate,
         deleteTemplate,
         sendManualChat,
-        generateAiDraft
+        generateAiDraft,
+        openConfirm
       }}
     >
       {children}
+      <ConfirmDialog {...confirmDialog} onClose={closeConfirm} />
     </DataContext.Provider>
   );
 }

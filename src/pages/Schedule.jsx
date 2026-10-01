@@ -27,7 +27,7 @@ import { formatIndonesianDate, formatShortDate } from '../utils/dateUtils';
 export default function Schedule() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { schedules, courses, lecturers, deleteSchedule } = useData();
+  const { schedules, courses, lecturers, deleteSchedule, openConfirm } = useData();
 
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'card' | 'calendar'
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,9 +61,16 @@ export default function Schedule() {
   };
 
   const handleDelete = (id, title) => {
-    if (window.confirm(`Hapus jadwal ${title}? Pesan otomatis terkait juga akan dibatalkan.`)) {
-      deleteSchedule(id);
-    }
+    openConfirm({
+      title: 'Hapus Jadwal Kuliah',
+      message: 'Apakah Anda yakin ingin menghapus jadwal perkuliahan ini dari kalender dan database?',
+      itemName: title,
+      note: 'Pesan otomatis pengingat WhatsApp terkait juga akan dibatalkan.',
+      confirmText: 'Hapus Jadwal',
+      cancelText: 'Batal',
+      variant: 'danger',
+      onConfirm: () => deleteSchedule(id)
+    });
   };
 
   // Filter application

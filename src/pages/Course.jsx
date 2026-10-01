@@ -6,7 +6,7 @@ import Modal from '../components/ui/Modal';
 import Input from '../components/ui/Input';
 
 export default function Course() {
-  const { courses, addCourse, updateCourse, deleteCourse, schedules } = useData();
+  const { courses, addCourse, updateCourse, deleteCourse, schedules, openConfirm } = useData();
 
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,9 +40,15 @@ export default function Course() {
   };
 
   const handleDelete = (id, name) => {
-    if (window.confirm(`Hapus mata kuliah "${name}"?`)) {
-      deleteCourse(id);
-    }
+    openConfirm({
+      title: 'Hapus Mata Kuliah',
+      message: 'Apakah Anda yakin ingin menghapus mata kuliah ini dari sistem?',
+      itemName: name,
+      note: 'Jadwal perkuliahan yang menggunakan mata kuliah ini dapat terpengaruh.',
+      confirmText: 'Hapus Matkul',
+      variant: 'danger',
+      onConfirm: () => deleteCourse(id)
+    });
   };
 
   const validate = () => {

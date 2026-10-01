@@ -19,7 +19,7 @@ import Input from '../components/ui/Input';
 import { renderTemplate, AVAILABLE_VARIABLES } from '../utils/templateEngine';
 
 export default function Templates() {
-  const { templates, addTemplate, updateTemplate, deleteTemplate, addToast, lecturers, courses } = useData();
+  const { templates, addTemplate, updateTemplate, deleteTemplate, addToast, lecturers, courses, openConfirm } = useData();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
@@ -65,12 +65,19 @@ export default function Templates() {
   };
 
   const handleDelete = (id, title) => {
-    if (window.confirm(`Hapus template "${title}"?`)) {
-      deleteTemplate(id);
-      if (selectedPreview?.id === id) {
-        setSelectedPreview(templates[0] || null);
+    openConfirm({
+      title: 'Hapus Template Pesan',
+      message: 'Apakah Anda yakin ingin menghapus template pesan ini?',
+      itemName: title,
+      confirmText: 'Hapus Template',
+      variant: 'danger',
+      onConfirm: () => {
+        deleteTemplate(id);
+        if (selectedPreview?.id === id) {
+          setSelectedPreview(templates[0] || null);
+        }
       }
-    }
+    });
   };
 
   const handleCopy = (tpl) => {
