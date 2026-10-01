@@ -80,34 +80,34 @@ export default function Lecturer() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Data Dosen Pengampu
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Kelola kontak WhatsApp dan informasi akademik dosen untuk pengingat jadwal
           </p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={handleOpenAdd}>
+        <Button variant="primary" icon={Plus} onClick={handleOpenAdd} className="w-full sm:w-auto">
           Tambah Dosen
         </Button>
       </div>
 
       {/* Control Bar: Search & View Toggle */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+      <div className="flex items-center justify-between gap-2 sm:gap-3 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Cari nama dosen, gelar, atau email..."
+            placeholder="Cari nama dosen..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500"
+            className="w-full pl-10 pr-3 py-1.5 sm:py-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-xs sm:text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500"
           />
         </div>
 
-        <div className="flex items-center gap-1 self-end sm:self-auto bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
           <button
             onClick={() => setViewMode('table')}
             className={`p-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
@@ -135,9 +135,9 @@ export default function Lecturer() {
 
       {/* Content Area */}
       {filteredLecturers.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800">
-          <GraduationCap className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-700 dark:text-slate-200">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 sm:p-12 text-center border border-slate-200 dark:border-slate-800">
+          <GraduationCap className="w-10 h-10 sm:w-12 sm:h-12 text-slate-300 mx-auto mb-3" />
+          <h3 className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-200">
             Tidak ada data dosen ditemukan
           </h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
@@ -153,12 +153,12 @@ export default function Lecturer() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
                 <tr>
-                  <th className="py-3.5 px-4 sm:px-6">Nama Dosen</th>
-                  <th className="py-3.5 px-4">Gelar</th>
-                  <th className="py-3.5 px-4">Nomor WhatsApp</th>
-                  <th className="py-3.5 px-4">Email</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4 sm:px-6 text-right">Aksi</th>
+                  <th className="py-3 px-3 sm:px-6">Nama Dosen</th>
+                  <th className="hidden sm:table-cell py-3.5 px-4">Gelar</th>
+                  <th className="py-3 px-3 sm:px-4">WhatsApp</th>
+                  <th className="hidden md:table-cell py-3.5 px-4">Email</th>
+                  <th className="hidden sm:table-cell py-3.5 px-4">Status</th>
+                  <th className="py-3 px-3 sm:px-6 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -166,37 +166,43 @@ export default function Lecturer() {
                   const isUnmasked = Boolean(unmaskedIds[lec.id]);
                   return (
                     <tr key={lec.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
-                      <td className="py-4 px-4 sm:px-6">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6">
                         <div>
-                          <div className="font-bold text-slate-900 dark:text-white leading-tight">
+                          <div className="font-bold text-slate-900 dark:text-white leading-tight text-xs sm:text-sm">
                             {lec.name}
                           </div>
+                          <div className="flex sm:hidden items-center gap-1.5 mt-0.5">
+                            <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">
+                              {lec.title || 'Dosen'}
+                            </span>
+                            <span className={`w-1.5 h-1.5 rounded-full ${lec.status === 'Aktif' ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                          </div>
                           {lec.notes && (
-                            <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                            <p className="hidden sm:block text-xs text-slate-400 line-clamp-1 mt-0.5">
                               {lec.notes}
                             </p>
                           )}
                         </div>
                       </td>
-                      <td className="py-4 px-4 font-medium text-slate-600 dark:text-slate-300">
+                      <td className="hidden sm:table-cell py-4 px-4 font-medium text-slate-600 dark:text-slate-300">
                         {lec.title || '-'}
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2 font-mono text-xs">
-                          <span className="text-slate-700 dark:text-slate-300 font-semibold">
+                      <td className="py-3 sm:py-4 px-3 sm:px-4">
+                        <div className="flex items-center gap-1.5 font-mono text-xs">
+                          <span className="text-slate-700 dark:text-slate-300 font-semibold text-[11px] sm:text-xs">
                             {isUnmasked ? formatPhoneNumber(lec.phone) : maskPhoneNumber(lec.phone)}
                           </span>
                           <button
                             onClick={() => toggleMask(lec.id)}
-                            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1"
+                            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-0.5 sm:p-1"
                             title={isUnmasked ? 'Sembunyikan nomor' : 'Tampilkan nomor'}
                           >
                             {isUnmasked ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                           </button>
                         </div>
-                        <span className="text-[10px] text-slate-400">Terenkripsi</span>
+                        <span className="hidden sm:inline text-[10px] text-slate-400">Terenkripsi</span>
                       </td>
-                      <td className="py-4 px-4 text-xs text-slate-500 dark:text-slate-400">
+                      <td className="hidden md:table-cell py-4 px-4 text-xs text-slate-500 dark:text-slate-400">
                         {lec.email ? (
                           <span className="flex items-center gap-1.5">
                             <Mail className="w-3.5 h-3.5 text-slate-400" />
@@ -204,7 +210,7 @@ export default function Lecturer() {
                           </span>
                         ) : '-'}
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="hidden sm:table-cell py-4 px-4">
                         <Badge
                           variant={lec.status === 'Aktif' ? 'success' : 'default'}
                           dot={lec.status === 'Aktif'}
@@ -212,35 +218,35 @@ export default function Lecturer() {
                           {lec.status}
                         </Badge>
                       </td>
-                      <td className="py-4 px-4 sm:px-6 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-3 sm:py-4 px-2 sm:px-6 text-right">
+                        <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => navigate(`/chat?lecturerId=${lec.id}`)}
                             title="Chat Dosen"
                             className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 dark:bg-indigo-950/70 dark:text-indigo-300 transition cursor-pointer"
                           >
-                            <MessageSquare className="w-4 h-4" />
+                            <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                           <button
                             onClick={() => setViewingLecturer(lec)}
                             title="Lihat Detail"
                             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
                           >
-                            <Eye className="w-4 h-4" />
+                            <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                           <button
                             onClick={() => handleOpenEdit(lec)}
                             title="Edit"
                             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 transition cursor-pointer"
                           >
-                            <Edit2 className="w-4 h-4" />
+                            <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(lec.id, lec.name)}
                             title="Hapus"
                             className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition cursor-pointer"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                         </div>
                       </td>

@@ -21,10 +21,10 @@ export default function Topbar({ onMenuClick, title }) {
         </button>
 
         <div className="min-w-0">
-          <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight truncate">
+          <h1 className="text-sm sm:text-lg font-bold text-slate-900 dark:text-white leading-tight truncate">
             {title || 'Dashboard'}
           </h1>
-          <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+          <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
             <span className="flex items-center gap-1 font-medium">
               <Clock className="w-3 h-3 text-slate-400" />
               <span>WIB (Asia/Jakarta)</span>
@@ -34,12 +34,12 @@ export default function Topbar({ onMenuClick, title }) {
       </div>
 
       {/* Right: Actions & Status Pills */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         {/* WhatsApp Web Status Pill */}
         <button
           onClick={openWaModal}
           type="button"
-          className={`flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-full border transition cursor-pointer ${
+          className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-full border transition cursor-pointer ${
             whatsAppStatus.isConnected
               ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/40'
               : whatsAppStatus.status === 'qr_ready'
@@ -52,12 +52,12 @@ export default function Topbar({ onMenuClick, title }) {
           {whatsAppStatus.isConnected ? (
             <span className="flex items-center gap-1.5 font-bold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="hidden sm:inline">WA:</span> +{whatsAppStatus.user?.phone || 'Terhubung'}
+              <span className="hidden sm:inline">WA:</span> <span className="hidden xs:inline">+{whatsAppStatus.user?.phone || 'Terhubung'}</span>
             </span>
           ) : (
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-              <span>Scan Barcode WA</span>
+              <span><span className="hidden sm:inline">Scan Barcode </span>WA</span>
             </span>
           )}
         </button>

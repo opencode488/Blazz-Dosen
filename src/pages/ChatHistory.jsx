@@ -43,13 +43,13 @@ export default function ChatHistory() {
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
           Riwayat Pengiriman Pesan
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
           Log lengkap seluruh pesan WhatsApp yang dikirimkan baik secara manual maupun otomatis
         </p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div className="relative max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
@@ -64,8 +64,8 @@ export default function ChatHistory() {
 
       {/* History Feed */}
       {filteredHistory.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800">
-          <History className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 sm:p-12 text-center border border-slate-200 dark:border-slate-800">
+          <History className="w-10 h-10 sm:w-12 sm:h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="text-base font-semibold text-slate-700 dark:text-slate-200">
             Belum ada riwayat pesan
           </h3>
@@ -74,11 +74,11 @@ export default function ChatHistory() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {filteredHistory.map((item) => (
             <div
               key={item.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-2xs hover:shadow-md transition space-y-3"
+              className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xs hover:shadow-md transition space-y-3"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>

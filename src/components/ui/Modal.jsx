@@ -30,7 +30,7 @@ export default function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200"
@@ -39,30 +39,30 @@ export default function Modal({
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidth} bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 z-10 my-8 transform transition-all duration-200`}
+        className={`relative w-full ${maxWidth} bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 z-10 my-auto sm:my-8 max-h-[92vh] flex flex-col transform transition-all duration-200`}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
+          <div className="min-w-0 pr-2">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate">
               {title}
             </h3>
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
                 {description}
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="mt-4">{children}</div>
+        <div className="mt-3 sm:mt-4 overflow-y-auto flex-1 pr-1 -mr-1">{children}</div>
       </div>
     </div>
   );

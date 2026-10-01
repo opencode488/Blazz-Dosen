@@ -11,21 +11,21 @@ export default function StatCard({ title, value, subtitle, icon: Icon, color = '
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-4.5 shadow-xs hover:shadow-md hover:border-indigo-300/60 dark:hover:border-indigo-800/60 transition-all duration-200 flex flex-col justify-between">
-      <div className="flex items-center justify-between gap-2 mb-2.5">
-        <p className="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider truncate" title={title}>
+    <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-3 sm:p-4.5 shadow-xs hover:shadow-md hover:border-indigo-300/60 dark:hover:border-indigo-800/60 transition-all duration-200 flex flex-col justify-between">
+      <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-2.5">
+        <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider truncate" title={title}>
           {title}
         </p>
-        <div className={`p-2 rounded-xl shrink-0 ${colorMap[color] || colorMap.indigo}`}>
-          <Icon className="w-4 h-4" />
+        <div className={`p-1.5 sm:p-2 rounded-xl shrink-0 ${colorMap[color] || colorMap.indigo}`}>
+          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </div>
       </div>
       <div>
-        <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
+        <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
           {value}
         </h3>
         {subtitle && (
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 truncate" title={subtitle}>
+          <p className="hidden sm:block text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 truncate" title={subtitle}>
             {subtitle}
           </p>
         )}

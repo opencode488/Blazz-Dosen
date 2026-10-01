@@ -115,18 +115,18 @@ export default function ChatAssistant() {
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
           AI Chat Assistant Dosen
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
           Tuliskan maksud Anda dalam bahasa santai, AI akan menyusun kalimat WhatsApp yang sopan, terstruktur, dan sesuai etika akademik.
         </p>
       </div>
 
       {/* Top Context Selector Bar (Nama Dosen, Mata Kuliah, Jadwal) */}
-      <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-4">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3 sm:space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
           Konteks Komunikasi
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {/* Dosen Selector */}
           <div>
             <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
@@ -193,13 +193,13 @@ export default function ChatAssistant() {
       </div>
 
       {/* Main Interactive Chat Area */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 sm:p-8 space-y-4 sm:space-y-6">
         {/* Quick Suggestion Pills */}
         <div>
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> Contoh Kebutuhan Pesan Cepat:
+            <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> Contoh Kebutuhan Pesan:
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
             {quickPrompts.map((q, idx) => (
               <button
                 key={idx}
@@ -207,7 +207,7 @@ export default function ChatAssistant() {
                   setInputPrompt(q);
                   handleGenerateDraft(q);
                 }}
-                className="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-800 dark:hover:bg-indigo-950/60 dark:hover:text-indigo-300 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-full transition text-left cursor-pointer border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800"
+                className="whitespace-nowrap sm:whitespace-normal text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 dark:bg-slate-800 dark:hover:bg-indigo-950/60 dark:hover:text-indigo-300 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-full transition text-left cursor-pointer border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 shrink-0 sm:shrink"
               >
                 "{q}"
               </button>
@@ -226,9 +226,9 @@ export default function ChatAssistant() {
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
               placeholder="Contoh: Saya ingin memastikan apakah besok kuliah tetap dilaksanakan..."
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-sm p-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 text-sm p-3.5 sm:p-4 pb-12 sm:pb-4 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
-            <div className="absolute right-3 bottom-3">
+            <div className="absolute right-2.5 bottom-2.5 sm:right-3 sm:bottom-3">
               <Button
                 variant="primary"
                 size="sm"
@@ -250,16 +250,16 @@ export default function ChatAssistant() {
                 <Bot className="w-4 h-4" />
               </div>
               <span className="text-xs font-bold text-slate-900 dark:text-white">
-                Draf Rekomendasi AI (Siap Kirim WhatsApp)
+                Draf Rekomendasi AI (WhatsApp)
               </span>
             </div>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
+            <span className="hidden sm:inline-block text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
               Etika Akademik Terverifikasi
             </span>
           </div>
 
-          <div className="bg-[#EFEAE2] dark:bg-[#0b141a] p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
-            <div className="max-w-xl bg-white dark:bg-[#202c33] rounded-2xl rounded-tl-none p-4 shadow-sm text-slate-900 dark:text-slate-100 text-sm leading-relaxed space-y-3">
+          <div className="bg-[#EFEAE2] dark:bg-[#0b141a] p-3.5 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+            <div className="max-w-xl bg-white dark:bg-[#202c33] rounded-2xl rounded-tl-none p-3.5 sm:p-4 shadow-sm text-slate-900 dark:text-slate-100 text-sm leading-relaxed space-y-3">
               {isEditingDraft ? (
                 <textarea
                   rows={4}
@@ -278,31 +278,34 @@ export default function ChatAssistant() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
               <Button
                 variant="outline"
                 size="sm"
                 icon={Edit3}
                 onClick={() => setIsEditingDraft(!isEditingDraft)}
+                className="flex-1 sm:flex-initial"
               >
-                {isEditingDraft ? 'Selesai Edit' : 'Edit Draf'}
+                {isEditingDraft ? 'Selesai' : 'Edit Draf'}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 icon={copied ? Check : Copy}
                 onClick={handleCopy}
+                className="flex-1 sm:flex-initial"
               >
-                {copied ? 'Tersalin!' : 'Copy'}
+                {copied ? 'Tersalin' : 'Copy'}
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
                 icon={RotateCw}
                 onClick={() => handleGenerateDraft()}
+                className="flex-1 sm:flex-initial"
               >
-                Regenerate
+                Ulangi
               </Button>
             </div>
 
@@ -311,8 +314,9 @@ export default function ChatAssistant() {
               size="sm"
               icon={Send}
               onClick={handleSendNow}
+              className="w-full sm:w-auto"
             >
-              {whatsAppStatus.isConnected ? 'Kirim via WhatsApp Web' : 'Scan Barcode & Kirim'}
+              {whatsAppStatus.isConnected ? 'Kirim via WhatsApp' : 'Scan & Kirim'}
             </Button>
           </div>
         </div>

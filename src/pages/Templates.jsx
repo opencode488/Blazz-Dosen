@@ -104,41 +104,41 @@ export default function Templates() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Template Pesan WhatsApp
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Format pesan baku dan otomatis menggunakan tag variabel dinamis
           </p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={handleOpenAdd}>
+        <Button variant="primary" icon={Plus} onClick={handleOpenAdd} className="w-full sm:w-auto">
           Tambah Template
         </Button>
       </div>
 
       {/* Variable Tags Cheat Sheet */}
-      <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-2 sm:space-y-3">
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4 text-indigo-500" />
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-            Daftar Variabel Dinamis (Dynamic Tags)
+            Daftar Variabel Dinamis
           </h3>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400">
           Sistem akan otomatis mengganti tag di dalam tanda kurung kurawal <code className="text-indigo-600 dark:text-indigo-400 font-mono font-bold">{`{{...}}`}</code> dengan informasi jadwal dan dosen yang bersangkutan.
         </p>
 
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-0.5">
           {AVAILABLE_VARIABLES.map((v) => (
             <div
               key={v.tag}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 dark:bg-slate-800/80 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-slate-50 dark:bg-slate-800/80 rounded-lg border border-slate-200 dark:border-slate-700 text-[11px] sm:text-xs font-mono text-slate-700 dark:text-slate-300"
               title={v.desc}
             >
               <span className="font-bold text-indigo-600 dark:text-indigo-400">{v.tag}</span>
-              <span className="text-[11px] text-slate-400 font-sans">({v.desc})</span>
+              <span className="hidden sm:inline text-[11px] text-slate-400 font-sans">({v.desc})</span>
             </div>
           ))}
         </div>

@@ -103,31 +103,31 @@ export default function Schedule() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Jadwal Perkuliahan
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Daftar sesi perkuliahan aktif terintegrasi dengan Auto Chat H-1 WhatsApp
           </p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={handleOpenAdd}>
+        <Button variant="primary" icon={Plus} onClick={handleOpenAdd} className="w-full sm:w-auto">
           Tambah Jadwal
         </Button>
       </div>
 
       {/* Filter and View Mode Toolbar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2.5 flex-1 min-w-[280px]">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 flex-1 w-full">
             <select
               value={filterCourse}
               onChange={(e) => setFilterCourse(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
             >
-              <option value="">Semua Mata Kuliah</option>
+              <option value="">Semua Matkul</option>
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.code} - {c.name}
@@ -138,7 +138,7 @@ export default function Schedule() {
             <select
               value={filterLecturer}
               onChange={(e) => setFilterLecturer(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
             >
               <option value="">Semua Dosen</option>
               {lecturers.map((l) => (
@@ -151,18 +151,18 @@ export default function Schedule() {
             <select
               value={filterAutoChat}
               onChange={(e) => setFilterAutoChat(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
             >
-              <option value="all">Semua Status Auto Chat</option>
+              <option value="all">Semua Auto Chat</option>
               <option value="true">Auto Chat Aktif</option>
-              <option value="false">Auto Chat Nonaktif</option>
+              <option value="false">Nonaktif</option>
             </select>
 
             <input
               type="date"
               value={filterDate}
               onChange={(e) => setFilterDate(e.target.value)}
-              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+              className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
             />
 
             {(filterCourse || filterLecturer || filterDate || filterAutoChat !== 'all') && (
@@ -173,7 +173,7 @@ export default function Schedule() {
                   setFilterDate('');
                   setFilterAutoChat('all');
                 }}
-                className="text-xs text-rose-500 hover:text-rose-600 font-semibold underline px-1 cursor-pointer"
+                className="col-span-2 sm:col-span-1 text-xs text-rose-500 hover:text-rose-600 font-semibold underline px-1 py-1 cursor-pointer text-center sm:text-left"
               >
                 Reset Filter
               </button>
@@ -181,7 +181,7 @@ export default function Schedule() {
           </div>
 
           {/* View Mode Switcher */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
+          <div className="flex items-center justify-end gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0 self-end sm:self-auto">
             <button
               onClick={() => setViewMode('table')}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
@@ -221,9 +221,9 @@ export default function Schedule() {
 
       {/* Main View Display */}
       {filteredSchedules.length === 0 && viewMode !== 'calendar' ? (
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-12 text-center border border-slate-200 dark:border-slate-800">
-          <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-700 dark:text-slate-200">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 sm:p-12 text-center border border-slate-200 dark:border-slate-800">
+          <Calendar className="w-10 h-10 sm:w-12 sm:h-12 text-slate-300 mx-auto mb-3" />
+          <h3 className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-200">
             Tidak ada jadwal perkuliahan
           </h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
@@ -239,14 +239,13 @@ export default function Schedule() {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
                 <tr>
-                  <th className="py-3.5 px-4 sm:px-6">Mata Kuliah</th>
-                  <th className="py-3.5 px-4">Dosen Pengampu</th>
-                  <th className="py-3.5 px-4">Tanggal</th>
-                  <th className="py-3.5 px-4">Jam</th>
-                  <th className="py-3.5 px-4">Ruang</th>
-                  <th className="py-3.5 px-4">Auto Chat</th>
-                  <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4 sm:px-6 text-right">Aksi</th>
+                  <th className="py-3 px-3 sm:px-6">Mata Kuliah</th>
+                  <th className="py-3 px-2 sm:px-4">Dosen</th>
+                  <th className="hidden sm:table-cell py-3.5 px-4">Tanggal & Jam</th>
+                  <th className="hidden md:table-cell py-3.5 px-4">Ruang</th>
+                  <th className="py-3 px-2 sm:px-4">Auto Chat</th>
+                  <th className="hidden lg:table-cell py-3.5 px-4">Status</th>
+                  <th className="py-3 px-2 sm:px-6 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -256,35 +255,40 @@ export default function Schedule() {
 
                   return (
                     <tr key={sch.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
-                      <td className="py-4 px-4 sm:px-6">
-                        <div className="font-bold text-slate-900 dark:text-white leading-tight">
+                      <td className="py-3 sm:py-4 px-3 sm:px-6">
+                        <div className="font-bold text-slate-900 dark:text-white leading-tight text-xs sm:text-base">
                           {crs?.name || 'Mata Kuliah'}
                         </div>
-                        <div className="text-xs text-indigo-600 dark:text-indigo-400 font-mono mt-0.5">
-                          {crs?.code} • {crs?.credits} SKS
+                        <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono mt-0.5">
+                          {crs?.code}
+                        </div>
+                        <div className="flex sm:hidden items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                          <span>{formatShortDate(sch.date)}</span>
+                          <span>•</span>
+                          <span>{sch.startTime}</span>
+                          <span>•</span>
+                          <span>{sch.room}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                      <td className="py-3 sm:py-4 px-2 sm:px-4">
+                        <div className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200">
                           {lec?.name || 'Dosen'}
                         </div>
-                        <div className="text-xs text-slate-400">
+                        <div className="hidden sm:block text-xs text-slate-400">
                           {lec?.title || ''}
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-xs font-medium text-slate-700 dark:text-slate-300">
-                        {formatIndonesianDate(sch.date)}
+                      <td className="hidden sm:table-cell py-4 px-4 text-xs font-medium text-slate-700 dark:text-slate-300">
+                        <div>{formatIndonesianDate(sch.date)}</div>
+                        <div className="text-slate-500 font-semibold">{sch.startTime} - {sch.endTime}</div>
                       </td>
-                      <td className="py-4 px-4 text-xs font-semibold text-slate-800 dark:text-slate-200">
-                        {sch.startTime} - {sch.endTime}
-                      </td>
-                      <td className="py-4 px-4 text-xs text-slate-600 dark:text-slate-300">
+                      <td className="hidden md:table-cell py-4 px-4 text-xs text-slate-600 dark:text-slate-300">
                         <span className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
                           <MapPin className="w-3 h-3 text-indigo-500" />
                           {sch.room}
                         </span>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-3 sm:py-4 px-2 sm:px-4">
                         <Badge
                           variant={sch.autoChat ? 'success' : 'default'}
                           dot={sch.autoChat}
@@ -293,7 +297,7 @@ export default function Schedule() {
                           {sch.autoChat ? 'H-1 08:00' : 'Off'}
                         </Badge>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="hidden lg:table-cell py-4 px-4">
                         <Badge
                           variant={
                             sch.status === 'scheduled'

@@ -211,29 +211,29 @@ export default function Settings() {
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
           Pengaturan Sistem
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
           Konfigurasi profil mahasiswa, integrasi Supabase PostgreSQL Database, dan WhatsApp API
         </p>
       </div>
 
       {/* Supabase Database Configuration */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-4 sm:p-7 shadow-xs space-y-4 sm:space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+            <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
               <Database className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                 Database Supabase PostgreSQL
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400">
                 Penyimpanan cloud untuk data dosen, mata kuliah, jadwal, dan pesan WhatsApp
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             {supabaseStatus.isConnected ? (
               <Badge variant="success" dot>
                 Supabase Terhubung
@@ -346,7 +346,7 @@ export default function Settings() {
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Profile Card */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-4 sm:p-7 shadow-xs space-y-4">
           <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
             <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -388,23 +388,23 @@ export default function Settings() {
         </div>
 
         {/* WhatsApp Web Multi-Device & Barcode Scan Integration */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-4 sm:p-7 shadow-xs space-y-4 sm:space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+              <div className="p-2 sm:p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 shrink-0">
                 <Smartphone className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                   Koneksi WhatsApp Web (Scan Barcode)
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400">
                   Tautkan WhatsApp Anda via barcode untuk pengiriman pesan otomatis langsung
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 self-start sm:self-auto">
               {whatsAppStatus.isConnected ? (
                 <Badge variant="success" dot>
                   Terhubung: +{whatsAppStatus.user?.phone || 'WA Aktif'}
@@ -541,18 +541,18 @@ export default function Settings() {
         </div>
 
         {/* Display & Dark Mode */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-7 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800 p-4 sm:p-7 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             {isDark ? (
-              <Moon className="w-5 h-5 text-indigo-400" />
+              <Moon className="w-5 h-5 text-indigo-400 shrink-0" />
             ) : (
-              <Sun className="w-5 h-5 text-amber-500" />
+              <Sun className="w-5 h-5 text-amber-500 shrink-0" />
             )}
             <div>
               <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                 Mode Tampilan Gelap (Dark Mode)
               </h4>
-              <p className="text-xs text-slate-400">
+              <p className="hidden sm:block text-xs text-slate-400">
                 Pilih antara mode terang (Light) atau gelap (Dark) untuk kenyamanan mata.
               </p>
             </div>
@@ -563,6 +563,7 @@ export default function Settings() {
             variant="outline"
             size="sm"
             onClick={toggleTheme}
+            className="w-full sm:w-auto"
           >
             {isDark ? 'Beralih ke Terang' : 'Beralih ke Gelap'}
           </Button>
@@ -570,7 +571,7 @@ export default function Settings() {
 
         {/* Bottom Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3 pt-2">
-          <Button type="submit" variant="primary" icon={Save}>
+          <Button type="submit" variant="primary" icon={Save} className="w-full sm:w-auto">
             Simpan Pengaturan Profil
           </Button>
         </div>

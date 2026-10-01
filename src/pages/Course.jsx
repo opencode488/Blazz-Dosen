@@ -86,30 +86,30 @@ export default function Course() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Data Mata Kuliah
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Daftar mata kuliah perkuliahan semester aktif
           </p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={handleOpenAdd}>
+        <Button variant="primary" icon={Plus} onClick={handleOpenAdd} className="w-full sm:w-auto">
           Tambah Mata Kuliah
         </Button>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
         <div className="relative max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Cari kode atau nama mata kuliah..."
+            placeholder="Cari kode atau nama matkul..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500"
+            className="w-full pl-10 pr-4 py-1.5 sm:py-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-xs sm:text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500"
           />
         </div>
       </div>

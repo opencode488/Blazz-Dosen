@@ -65,12 +65,12 @@ export default function AutoChat() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
             Auto Chat H-1 WhatsApp
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Manajemen antrean pesan pengingat terjadwal otomatis (Timezone: Asia/Jakarta WIB)
           </p>
         </div>
@@ -78,75 +78,75 @@ export default function AutoChat() {
         <button
           onClick={openWaModal}
           type="button"
-          className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition cursor-pointer ${
+          className={`inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl border text-xs font-semibold transition cursor-pointer self-start sm:self-auto ${
             whatsAppStatus.isConnected
               ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
               : 'bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 hover:bg-amber-100 animate-pulse'
           }`}
           title="Klik untuk melihat status / scan barcode WhatsApp"
         >
-          <QrCode className="w-3.5 h-3.5" />
+          <QrCode className="w-3.5 h-3.5 shrink-0" />
           {whatsAppStatus.isConnected ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>WA Web: +{whatsAppStatus.user?.phone}</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <span>WA: +{whatsAppStatus.user?.phone}</span>
             </>
           ) : (
             <>
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <span>WA Web Belum Terhubung - Scan Barcode</span>
+              <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+              <span>Scan Barcode WA</span>
             </>
           )}
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto">
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 dark:border-slate-800 pb-2.5 sm:pb-3 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab('scheduled')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'scheduled'
               ? 'bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 shadow-xs'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <ClockAlert className="w-4 h-4 text-amber-500" />
+          <ClockAlert className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
           <span>Scheduled ({tabCounts.scheduled})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('sent')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'sent'
               ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 shadow-xs'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <Send className="w-4 h-4 text-emerald-500" />
+          <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
           <span>Sent ({tabCounts.sent})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('failed')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'failed'
               ? 'bg-rose-100 dark:bg-rose-950 text-rose-900 dark:text-rose-200 shadow-xs'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <AlertCircle className="w-4 h-4 text-rose-500" />
+          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-500" />
           <span>Failed ({tabCounts.failed})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('cancelled')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 ${
             activeTab === 'cancelled'
               ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-xs'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <XCircle className="w-4 h-4 text-slate-400" />
+          <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
           <span>Cancelled ({tabCounts.cancelled})</span>
         </button>
       </div>

@@ -50,26 +50,26 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-800 text-white p-6 sm:p-7 shadow-lg shadow-indigo-600/10 border border-white/10">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-800 text-white p-4.5 sm:p-7 shadow-lg shadow-indigo-600/10 border border-white/10">
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold text-indigo-50 mb-3 border border-white/20">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>AI Student Assistant • WhatsApp Automation</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/15 backdrop-blur-md text-[10px] sm:text-xs font-semibold text-indigo-50 mb-2 sm:mb-3 border border-white/20">
+            <Sparkles className="w-3 h-3 text-amber-300" />
+            <span>AI Student Assistant • WhatsApp</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h2 className="text-xl sm:text-3xl font-extrabold tracking-tight">
             Selamat datang, {user?.name || 'idk dan direxx'} 👋
           </h2>
-          <p className="mt-1.5 text-indigo-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">
+          <p className="hidden sm:block mt-1.5 text-indigo-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">
             Kelola jadwal perkuliahan dan otomatisasi pesan pengingat dosen dengan mudah. Pesan terkirim otomatis H-1 pukul 08.00 WIB langsung via WhatsApp.
           </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+          <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center gap-2 sm:gap-2.5">
             <Button
               variant="secondary"
               size="sm"
               icon={Plus}
               onClick={() => navigate('/schedule?action=new')}
-              className="bg-white text-indigo-900 hover:bg-indigo-50 font-bold shadow-sm"
+              className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-indigo-50 font-bold shadow-sm text-xs"
             >
               Tambah Jadwal Baru
             </Button>
@@ -78,7 +78,7 @@ export default function Dashboard() {
               size="sm"
               icon={Bot}
               onClick={() => navigate('/chat')}
-              className="text-white hover:bg-white/15 border border-white/20 font-medium"
+              className="w-full sm:w-auto text-white hover:bg-white/15 border border-white/20 font-medium text-xs"
             >
               AI Chat Assistant
             </Button>
@@ -91,21 +91,21 @@ export default function Dashboard() {
 
       {/* WhatsApp Web Callout Banner (only if not connected) */}
       {!whatsAppStatus.isConnected && (
-        <div className="p-4 sm:p-4.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/80 dark:border-amber-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="p-3.5 sm:p-4.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300/80 dark:border-amber-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 shadow-xs">
-              <QrCode className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 shadow-xs">
+              <QrCode className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                  Tautkan WhatsApp Web Anda
+                  Tautkan WhatsApp Web
                 </span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-                  Perlu Scan Barcode
+                  Perlu Scan
                 </span>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-[11px] leading-relaxed">
+              <p className="hidden sm:block text-slate-500 dark:text-slate-400 mt-0.5 text-[11px] leading-relaxed">
                 Scan barcode langsung dari website agar pesan pengingat jadwal kuliah dapat terkirim otomatis ke WhatsApp dosen.
               </p>
             </div>
@@ -116,9 +116,9 @@ export default function Dashboard() {
             size="sm"
             icon={QrCode}
             onClick={openWaModal}
-            className="shrink-0 text-xs py-2 px-3.5 shadow-sm font-semibold whitespace-nowrap"
+            className="w-full sm:w-auto shrink-0 text-xs py-2 px-3.5 shadow-sm font-semibold whitespace-nowrap"
           >
-            Scan Barcode Sekarang
+            Scan Barcode
           </Button>
         </div>
       )}
