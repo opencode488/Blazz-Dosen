@@ -1,12 +1,12 @@
 import React from 'react';
-import { Menu, Sun, Moon, Trash2, Clock, ShieldCheck, Database, QrCode } from 'lucide-react';
+import { Menu, Sun, Moon, Trash2, Clock, ShieldCheck, Database, QrCode, LogOut } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 
 export default function Topbar({ onMenuClick, title }) {
   const { isDark, toggleTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { clearAllData, supabaseStatus, openConfirm, whatsAppStatus, openWaModal } = useData();
 
   return (
@@ -129,6 +129,15 @@ export default function Topbar({ onMenuClick, title }) {
             </div>
           </div>
         </div>
+
+        {/* Lock / Logout Button */}
+        <button
+          onClick={logout}
+          title="Kunci Akses / Logout"
+          className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition cursor-pointer"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
       </div>
     </header>
   );
