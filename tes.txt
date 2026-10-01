@@ -1,0 +1,991 @@
+Saya ingin membangun sebuah website bernama **"Dosen Chat Bot"** menggunakan **React JS + Vite**.
+
+Website ini merupakan dashboard mahasiswa untuk mengelola data dosen, mata kuliah, jadwal perkuliahan, dan mengirim pesan WhatsApp kepada dosen secara terjadwal.
+
+## TEKNOLOGI UTAMA
+
+### Frontend
+
+* React JS
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Axios
+* Lucide React Icons
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Database
+
+* Supabase PostgreSQL
+
+### AI
+
+* AI API melalui backend
+
+### WhatsApp
+
+* WhatsApp Business Platform/API resmi atau provider WhatsApp resmi
+
+### Scheduler
+
+* Backend cron/scheduler
+* Timezone: Asia/Jakarta (WIB)
+
+Jangan menggunakan Next.js.
+Jangan menggunakan Laravel.
+Frontend harus benar-benar menggunakan React JS + Vite.
+
+---
+
+# 1. KONSEP WEBSITE
+
+Website berfungsi sebagai **Student Communication Assistant**.
+
+Mahasiswa dapat menyimpan:
+
+* Nama dosen
+* Nomor WhatsApp dosen
+* Nama mata kuliah
+* Tanggal kuliah
+* Jam kuliah
+* Ruang kelas
+* Catatan
+
+Kemudian sistem dapat membuat pesan kepada dosen.
+
+Fitur utama:
+
+**Auto Chat H-1**
+
+Jika mata kuliah berlangsung pada:
+
+Senin, 5 Oktober 2026
+08.00 - 09.40
+
+maka sistem menjadwalkan pesan:
+
+Minggu, 4 Oktober 2026
+08.00 WIB
+
+Pesan dikirim ke nomor WhatsApp dosen.
+
+---
+
+# 2. STRUKTUR FRONTEND
+
+Gunakan struktur React yang rapi:
+
+src/
+├── assets/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   ├── dashboard/
+│   ├── schedule/
+│   ├── lecturer/
+│   ├── chat/
+│   └── automation/
+│
+├── pages/
+│   ├── Dashboard.jsx
+│   ├── Schedule.jsx
+│   ├── ScheduleDetail.jsx
+│   ├── Lecturer.jsx
+│   ├── Course.jsx
+│   ├── ChatAssistant.jsx
+│   ├── AutoChat.jsx
+│   ├── ChatHistory.jsx
+│   ├── Templates.jsx
+│   └── Settings.jsx
+│
+├── layouts/
+│   ├── DashboardLayout.jsx
+│   └── AuthLayout.jsx
+│
+├── services/
+│   ├── api.js
+│   ├── scheduleService.js
+│   ├── lecturerService.js
+│   ├── chatService.js
+│   └── automationService.js
+│
+├── hooks/
+├── utils/
+├── context/
+├── routes/
+├── App.jsx
+└── main.jsx
+
+Gunakan component reusable sebanyak mungkin.
+
+---
+
+# 3. ROUTING
+
+Gunakan React Router DOM.
+
+Routes:
+
+/login
+
+/dashboard
+
+/schedule
+
+/schedule/:id
+
+/lecturers
+
+/courses
+
+/chat
+
+/auto-chat
+
+/chat-history
+
+/templates
+
+/settings
+
+Gunakan protected route untuk halaman dashboard.
+
+---
+
+# 4. LAYOUT
+
+Gunakan dashboard layout.
+
+Desktop:
+
+Sidebar di sebelah kiri.
+
+Topbar di bagian atas.
+
+Content area di tengah.
+
+Mobile:
+
+Sidebar berubah menjadi hamburger menu.
+
+Navbar mobile tetap mudah digunakan.
+
+Sidebar:
+
+🏠 Dashboard
+
+📅 Jadwal Kuliah
+
+👨‍🏫 Dosen
+
+📚 Mata Kuliah
+
+🤖 Chat Assistant
+
+⏰ Auto Chat
+
+📝 Template Pesan
+
+📜 Riwayat Chat
+
+⚙️ Settings
+
+---
+
+# 5. DASHBOARD
+
+Buat dashboard modern.
+
+Header:
+
+"Selamat datang 👋"
+
+"Kelola jadwal dan komunikasi dengan dosen dengan lebih mudah."
+
+Statistic cards:
+
+Total Dosen
+
+Total Mata Kuliah
+
+Jadwal Hari Ini
+
+Pesan Terjadwal
+
+Pesan Terkirim
+
+Pesan Gagal
+
+Kemudian:
+
+## Jadwal Terdekat
+
+Tampilkan card:
+
+Basis Data
+
+Dr. Budi Santoso, M.Kom.
+
+📅 Senin, 5 Oktober 2026
+
+🕐 08.00 - 09.40
+
+📍 Lab Komputer 2
+
+Status:
+
+🟢 Auto Chat Active
+
+Button:
+
+[Detail]
+
+[Chat]
+
+---
+
+# 6. HALAMAN DOSEN
+
+Route:
+
+/lecturers
+
+Tampilkan tabel/card:
+
+Nama Dosen
+
+Gelar
+
+Nomor WhatsApp
+
+Email
+
+Status
+
+Action
+
+Action:
+
+View
+
+Edit
+
+Delete
+
+Chat
+
+Tambahkan search.
+
+Tambahkan button:
+
+* Tambah Dosen
+
+---
+
+# 7. FORM DOSEN
+
+Field:
+
+Nama Dosen
+
+Gelar
+
+Nomor WhatsApp
+
+Email
+
+Catatan
+
+Validasi nomor WhatsApp.
+
+Contoh:
+
+Input:
+
+081234567890
+
+Normalisasi backend:
+
+6281234567890
+
+Nomor WhatsApp tidak boleh ditampilkan pada halaman publik.
+
+---
+
+# 8. HALAMAN MATA KULIAH
+
+Route:
+
+/courses
+
+Field:
+
+Kode Mata Kuliah
+
+Nama Mata Kuliah
+
+SKS
+
+Catatan
+
+Fitur:
+
+Tambah
+
+Edit
+
+Delete
+
+Search
+
+---
+
+# 9. HALAMAN JADWAL
+
+Route:
+
+/schedule
+
+Tampilkan jadwal dalam:
+
+* Table view
+* Card view
+* Calendar view
+
+Data:
+
+Dosen
+
+Mata Kuliah
+
+Tanggal
+
+Jam
+
+Ruang
+
+Auto Chat
+
+Status
+
+Action
+
+Filter:
+
+Tanggal
+
+Dosen
+
+Mata Kuliah
+
+Ruang
+
+Status Auto Chat
+
+---
+
+# 10. TAMBAH JADWAL
+
+Buat form React.
+
+Field:
+
+Dosen
+
+Gunakan searchable dropdown.
+
+Mata Kuliah
+
+Gunakan searchable dropdown.
+
+Tanggal
+
+Date picker.
+
+Jam Mulai
+
+Time picker.
+
+Jam Selesai
+
+Time picker.
+
+Ruang Kelas
+
+Input.
+
+Catatan
+
+Textarea.
+
+Auto Chat
+
+Toggle ON/OFF.
+
+Waktu Pengiriman
+
+Default:
+
+H-1 pukul 08.00 WIB
+
+---
+
+# 11. DETAIL JADWAL
+
+Route:
+
+/schedule/:id
+
+Tampilkan:
+
+Nama Mata Kuliah
+
+Nama Dosen
+
+Nomor WhatsApp
+
+Tanggal
+
+Jam
+
+Ruang
+
+Catatan
+
+Auto Chat Status
+
+Scheduled Time
+
+Message Status
+
+Button:
+
+[Edit]
+
+[Delete]
+
+[Chat Dosen]
+
+[Preview Auto Chat]
+
+[Cancel Scheduled Message]
+
+---
+
+# 12. AUTO CHAT
+
+Route:
+
+/auto-chat
+
+Halaman ini khusus untuk pesan otomatis.
+
+Tabs:
+
+Scheduled
+
+Sent
+
+Failed
+
+Cancelled
+
+Setiap card:
+
+Dosen
+
+Mata Kuliah
+
+Tanggal Kuliah
+
+Waktu Pengiriman
+
+Status
+
+Preview Message
+
+Action
+
+Contoh:
+
+┌──────────────────────────────────────┐
+│ Basis Data                            │
+│ Dr. Budi Santoso                     │
+│                                      │
+│ Kuliah: 5 Oktober 2026               │
+│ Kirim: 4 Oktober 2026, 08.00 WIB     │
+│                                      │
+│ 🟡 Scheduled                         │
+│                                      │
+│ [Preview] [Edit] [Cancel]             │
+└──────────────────────────────────────┘
+
+---
+
+# 13. CHAT ASSISTANT
+
+Route:
+
+/chat
+
+Buat interface seperti aplikasi chat modern.
+
+Bagian atas:
+
+Nama Dosen
+
+Mata Kuliah
+
+Jadwal
+
+Kemudian:
+
+AI Assistant
+
+Input:
+
+"Saya ingin menyampaikan..."
+
+Contoh input:
+
+"Saya ingin memastikan apakah besok kuliah tetap dilaksanakan."
+
+AI membuat draft:
+
+"Selamat pagi, Pak Budi. Mohon izin bertanya, apakah perkuliahan Basis Data besok tetap dilaksanakan sesuai jadwal? Terima kasih, Pak."
+
+Button:
+
+[Edit]
+
+[Copy]
+
+[Regenerate]
+
+[Schedule]
+
+---
+
+# 14. TEMPLATE PESAN
+
+Route:
+
+/templates
+
+Template:
+
+Konfirmasi Jadwal
+
+Izin Tidak Hadir
+
+Menanyakan Tugas
+
+Mengirim Tugas
+
+Menanyakan Ruang
+
+Meminta Bimbingan
+
+Template menggunakan variable:
+
+{{nama_dosen}}
+
+{{nama_matkul}}
+
+{{tanggal}}
+
+{{jam_mulai}}
+
+{{jam_selesai}}
+
+{{ruang}}
+
+Contoh:
+
+"Selamat pagi, {{nama_dosen}}. Mohon izin mengingatkan bahwa besok terdapat perkuliahan {{nama_matkul}} pada pukul {{jam_mulai}} - {{jam_selesai}} di {{ruang}}."
+
+---
+
+# 15. AUTO CHAT LOGIC
+
+Jika:
+
+tanggal kuliah = 5 Oktober 2026
+
+maka:
+
+scheduled_at = 4 Oktober 2026 08:00 Asia/Jakarta
+
+Jika:
+
+tanggal kuliah = 6 Oktober 2026
+
+maka:
+
+scheduled_at = 5 Oktober 2026 08:00 Asia/Jakarta
+
+Jika jadwal diubah, scheduled_at harus ikut berubah.
+
+Jika jadwal dihapus:
+
+scheduled message harus dibatalkan.
+
+Jika Auto Chat OFF:
+
+tidak membuat scheduled message.
+
+---
+
+# 16. BACKEND API
+
+React frontend berkomunikasi dengan backend menggunakan Axios.
+
+API:
+
+GET /api/lecturers
+
+POST /api/lecturers
+
+PUT /api/lecturers/:id
+
+DELETE /api/lecturers/:id
+
+GET /api/courses
+
+POST /api/courses
+
+PUT /api/courses/:id
+
+DELETE /api/courses/:id
+
+GET /api/schedules
+
+POST /api/schedules
+
+GET /api/schedules/:id
+
+PUT /api/schedules/:id
+
+DELETE /api/schedules/:id
+
+POST /api/chat/generate
+
+GET /api/chat/history
+
+GET /api/automation
+
+POST /api/automation/:id/cancel
+
+POST /api/automation/:id/reschedule
+
+---
+
+# 17. DATABASE
+
+Gunakan Supabase PostgreSQL.
+
+Tabel:
+
+users
+
+lecturers
+
+courses
+
+schedules
+
+message_templates
+
+scheduled_messages
+
+chat_history
+
+scheduled_messages:
+
+id
+
+schedule_id
+
+lecturer_id
+
+phone_number
+
+message
+
+scheduled_at
+
+sent_at
+
+status
+
+provider_message_id
+
+error_message
+
+created_at
+
+updated_at
+
+---
+
+# 18. WHATSAPP
+
+Gunakan WhatsApp Business Platform/API resmi.
+
+Jangan membuat automation dengan WhatsApp Web browser.
+
+Jangan menyimpan API token di React.
+
+React hanya berkomunikasi dengan backend.
+
+Backend yang menangani WhatsApp API.
+
+Contoh flow:
+
+React
+
+↓
+
+Express API
+
+↓
+
+Scheduler
+
+↓
+
+WhatsApp API
+
+↓
+
+Nomor WhatsApp Dosen
+
+---
+
+# 19. SCHEDULER
+
+Backend menjalankan scheduler menggunakan timezone:
+
+Asia/Jakarta
+
+Scheduler mengecek scheduled_messages.
+
+Jika:
+
+status = scheduled
+
+dan
+
+scheduled_at <= current time
+
+maka:
+
+1. Lock message.
+2. Ambil nomor.
+3. Ambil message.
+4. Kirim melalui WhatsApp API.
+5. Simpan provider_message_id.
+6. Update status.
+
+Status:
+
+scheduled
+
+processing
+
+sent
+
+failed
+
+cancelled
+
+Pastikan terdapat mekanisme idempotency sehingga pesan tidak terkirim dua kali.
+
+---
+
+# 20. UI DESIGN
+
+Gunakan Tailwind CSS.
+
+Style:
+
+Modern
+
+Clean
+
+Minimal
+
+Professional
+
+Student productivity dashboard
+
+Gunakan:
+
+* rounded-xl
+* subtle shadow
+* whitespace
+* clean typography
+* responsive grid
+* modern cards
+* badges
+* modal
+* toast
+* loading state
+* empty state
+
+Warna utama:
+
+Indigo / Blue
+
+Background:
+
+Slate / Gray
+
+Cards:
+
+White
+
+Buat dark mode sebagai fitur opsional.
+
+---
+
+# 21. RESPONSIVE
+
+Harus responsive:
+
+Desktop
+
+Laptop
+
+Tablet
+
+Android
+
+iPhone
+
+Mobile table harus berubah menjadi card.
+
+Sidebar desktop berubah menjadi drawer/hamburger di mobile.
+
+---
+
+# 22. ERROR HANDLING
+
+React harus memiliki:
+
+Loading state
+
+Error state
+
+Empty state
+
+Success toast
+
+Confirmation modal
+
+API error handler
+
+Contoh:
+
+Berhasil menyimpan:
+
+"Jadwal berhasil ditambahkan."
+
+Berhasil menjadwalkan:
+
+"Pesan berhasil dijadwalkan untuk 4 Oktober 2026 pukul 08.00 WIB."
+
+Gagal:
+
+"Pesan gagal dijadwalkan. Silakan periksa data jadwal."
+
+---
+
+# 23. KEAMANAN
+
+Jangan expose:
+
+AI API key
+
+WhatsApp API token
+
+Database service role key
+
+Semua credential hanya di backend environment variables.
+
+Gunakan:
+
+.env
+
+Frontend hanya boleh menggunakan public configuration yang memang aman.
+
+---
+
+# 24. PROTOTYPE TERLEBIH DAHULU
+
+Sebelum menghubungkan API sebenarnya, buat seluruh UI menggunakan dummy data.
+
+Saya ingin bisa menjalankan:
+
+npm install
+
+npm run dev
+
+dan melihat website React secara langsung.
+
+Gunakan dummy data seperti:
+
+Dosen:
+
+Dr. Budi Santoso, M.Kom.
+
+Mata Kuliah:
+
+Basis Data
+
+Tanggal:
+
+5 Oktober 2026
+
+Jam:
+
+08.00 - 09.40
+
+Ruang:
+
+Lab Komputer 2
+
+Nomor:
+
+6281234567890
+
+---
+
+# 25. HASIL AKHIR
+
+Saya ingin mendapatkan aplikasi React JS yang terlihat seperti produk nyata, bukan sekadar halaman CRUD.
+
+Prioritaskan:
+
+1. Dashboard
+2. Jadwal
+3. Data Dosen
+4. Data Mata Kuliah
+5. Chat Assistant
+6. Auto Chat
+7. Scheduled Message
+8. Riwayat
+9. Template
+10. Responsive UI
+
+Mulai dari **frontend React JS + Vite + Tailwind CSS dengan dummy data terlebih dahulu**.
+
+Pastikan semua halaman dapat dinavigasikan menggunakan React Router.
+
+Setelah frontend selesai dan stabil, baru siapkan integrasi:
+
+React → Express API → Supabase → Scheduler → WhatsApp API → Dosen.
