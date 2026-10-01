@@ -17,7 +17,6 @@ import {
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import Avatar from '../components/ui/Avatar';
 import LecturerModal from '../components/lecturer/LecturerModal';
 import Modal from '../components/ui/Modal';
 import { maskPhoneNumber, formatPhoneNumber } from '../utils/phoneUtils';
@@ -168,23 +167,15 @@ export default function Lecturer() {
                   return (
                     <tr key={lec.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
                       <td className="py-4 px-4 sm:px-6">
-                        <div className="flex items-center gap-3">
-                          <Avatar
-                            src={lec.avatar}
-                            name={lec.name}
-                            size="sm"
-                            status={lec.status}
-                          />
-                          <div>
-                            <div className="font-bold text-slate-900 dark:text-white leading-tight">
-                              {lec.name}
-                            </div>
-                            {lec.notes && (
-                              <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
-                                {lec.notes}
-                              </p>
-                            )}
+                        <div>
+                          <div className="font-bold text-slate-900 dark:text-white leading-tight">
+                            {lec.name}
                           </div>
+                          {lec.notes && (
+                            <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                              {lec.notes}
+                            </p>
+                          )}
                         </div>
                       </td>
                       <td className="py-4 px-4 font-medium text-slate-600 dark:text-slate-300">
@@ -271,22 +262,13 @@ export default function Lecturer() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar
-                        src={lec.avatar}
-                        name={lec.name}
-                        size="md"
-                        rounded="rounded-2xl"
-                        status={lec.status}
-                      />
-                      <div>
-                        <h4 className="font-bold text-slate-900 dark:text-white leading-snug">
-                          {lec.name}
-                        </h4>
-                        <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-                          {lec.title || 'Dosen'}
-                        </span>
-                      </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white leading-snug">
+                        {lec.name}
+                      </h4>
+                      <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
+                        {lec.title || 'Dosen'}
+                      </span>
                     </div>
                     <Badge variant={lec.status === 'Aktif' ? 'success' : 'default'} dot={lec.status === 'Aktif'} size="sm">
                       {lec.status}
@@ -374,25 +356,18 @@ export default function Lecturer() {
           title="Profil Lengkap Dosen"
         >
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Avatar
-                src={viewingLecturer.avatar}
-                name={viewingLecturer.name}
-                size="xl"
-                rounded="rounded-2xl"
-                status={viewingLecturer.status}
-              />
+            <div className="pb-3 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                   {viewingLecturer.name}
                 </h3>
-                <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mt-0.5">
                   {viewingLecturer.title || 'Dosen'}
                 </p>
-                <Badge variant={viewingLecturer.status === 'Aktif' ? 'success' : 'default'} size="sm" className="mt-1">
-                  {viewingLecturer.status}
-                </Badge>
               </div>
+              <Badge variant={viewingLecturer.status === 'Aktif' ? 'success' : 'default'} size="sm">
+                {viewingLecturer.status}
+              </Badge>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 space-y-2 text-xs">

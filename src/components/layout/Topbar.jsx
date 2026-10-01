@@ -1,5 +1,4 @@
-import React from 'react';
-import { Menu, Sun, Moon, Clock, Database, QrCode, LogOut } from 'lucide-react';
+import { Menu, Sun, Moon, Clock, Database, QrCode, LogOut, User } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
@@ -91,11 +90,9 @@ export default function Topbar({ onMenuClick, title }) {
 
         {/* User Capsule & Logout */}
         <div className="flex items-center gap-2 pl-1 bg-slate-50 dark:bg-slate-800/50 py-1 px-1.5 sm:px-2.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50">
-          <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'}
-            alt={user?.name || 'Mahasiswa'}
-            className="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500/20"
-          />
+          <div className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+            <User className="w-3.5 h-3.5" />
+          </div>
           <div className="hidden sm:block text-left">
             <div className="text-xs font-semibold text-slate-900 dark:text-white leading-none">
               {user?.name || 'idk dan direxx'}

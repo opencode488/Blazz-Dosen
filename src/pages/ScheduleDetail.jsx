@@ -20,7 +20,6 @@ import {
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import Avatar from '../components/ui/Avatar';
 import Modal from '../components/ui/Modal';
 import ScheduleModal from '../components/schedule/ScheduleModal';
 import { formatIndonesianDate, formatScheduledTimestamp } from '../utils/dateUtils';
@@ -168,23 +167,14 @@ export default function ScheduleDetail() {
 
         {/* Lecturer Details & WhatsApp info */}
         <div className="p-5 rounded-2xl bg-indigo-50/50 dark:bg-slate-800/40 border border-indigo-100/70 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Avatar
-              src={lecturer?.avatar}
-              name={lecturer?.name}
-              size="md"
-              rounded="rounded-xl"
-              status={lecturer?.status}
-            />
-            <div>
-              <div className="text-xs text-slate-400 font-medium">Dosen Pengampu</div>
-              <div className="font-bold text-slate-900 dark:text-white">
-                {lecturer ? `${lecturer.name}${lecturer.title ? ', ' + lecturer.title : ''}` : '-'}
-              </div>
-              <div className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-300 mt-0.5">
-                <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                <span>{lecturer ? formatPhoneNumber(lecturer.phone) : '-'}</span>
-              </div>
+          <div>
+            <div className="text-xs text-slate-400 font-medium">Dosen Pengampu</div>
+            <div className="font-bold text-slate-900 dark:text-white">
+              {lecturer ? `${lecturer.name}${lecturer.title ? ', ' + lecturer.title : ''}` : '-'}
+            </div>
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-300 mt-0.5">
+              <Phone className="w-3.5 h-3.5 text-emerald-500" />
+              <span>{lecturer ? formatPhoneNumber(lecturer.phone) : '-'}</span>
             </div>
           </div>
 

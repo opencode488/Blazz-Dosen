@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, MapPin, MessageSquare, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
-import Avatar from '../ui/Avatar';
 import { formatIndonesianDate } from '../../utils/dateUtils';
 
 export default function UpcomingScheduleCard({ schedule, course, lecturer }) {
@@ -31,15 +30,6 @@ export default function UpcomingScheduleCard({ schedule, course, lecturer }) {
           </p>
         </div>
 
-        {lecturer && (
-          <Avatar
-            src={lecturer.avatar}
-            name={lecturer.name}
-            size="md"
-            rounded="rounded-xl"
-            className="self-start"
-          />
-        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4 py-1">
