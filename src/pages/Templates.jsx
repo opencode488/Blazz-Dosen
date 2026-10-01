@@ -40,7 +40,7 @@ export default function Templates() {
     startTime: '08.00',
     endTime: '09.40',
     room: 'Lab Komputer 2',
-    studentName: 'Ahmad Dinur',
+    studentName: 'idk dan direxx',
     studentNim: '220101089'
   };
 

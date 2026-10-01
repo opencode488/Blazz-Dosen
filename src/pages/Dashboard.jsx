@@ -57,7 +57,7 @@ export default function Dashboard() {
             <span>AI Student Assistant • WhatsApp Automation</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Selamat datang, {user?.name?.split(' ')[0] || 'Mahasiswa'} 👋
+            Selamat datang, {user?.name || 'idk dan direxx'} 👋
           </h2>
           <p className="mt-1.5 text-indigo-100/90 text-xs sm:text-sm leading-relaxed max-w-xl">
             Kelola jadwal perkuliahan dan otomatisasi pesan pengingat dosen dengan mudah. Pesan terkirim otomatis H-1 pukul 08.00 WIB langsung via WhatsApp.

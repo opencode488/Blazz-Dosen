@@ -16,16 +16,22 @@ export function AuthProvider({ children }) {
     const saved = localStorage.getItem('dosen_user');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed.name && (parsed.name.includes('Ahmad') || parsed.name.includes('Dinur'))) {
+          parsed.name = 'idk dan direxx';
+          parsed.email = 'idk.direxx@student.univ.ac.id';
+          localStorage.setItem('dosen_user', JSON.stringify(parsed));
+        }
+        return parsed;
       } catch {
         // ignore parse error
       }
     }
     return {
       id: 'usr-1',
-      name: 'Ahmad Dinur',
+      name: 'idk dan direxx',
       nim: '220101089',
-      email: 'ahmad.dinur@student.univ.ac.id',
+      email: 'idk.direxx@student.univ.ac.id',
       avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
       university: 'Universitas Indonesia',
       program: 'Teknik Informatika - Semester 5'

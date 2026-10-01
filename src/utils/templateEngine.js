@@ -12,7 +12,7 @@ export function renderTemplate(templateString, variables = {}) {
     '{{jam_mulai}}': variables.startTime || variables.jam_mulai || '',
     '{{jam_selesai}}': variables.endTime || variables.jam_selesai || '',
     '{{ruang}}': variables.room || variables.ruang || '',
-    '{{nama_mahasiswa}}': variables.studentName || 'Ahmad Dinur',
+    '{{nama_mahasiswa}}': variables.studentName || 'idk dan direxx',
     '{{nim}}': variables.studentNim || '220101089',
   };
 

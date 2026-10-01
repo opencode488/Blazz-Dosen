@@ -98,7 +98,7 @@ export default function Topbar({ onMenuClick, title }) {
           />
           <div className="hidden sm:block text-left">
             <div className="text-xs font-semibold text-slate-900 dark:text-white leading-none">
-              {user?.name || 'Ahmad Dinur'}
+              {user?.name || 'idk dan direxx'}
             </div>
             <div className="text-[10px] text-slate-400 leading-none mt-1">
               NIM: {user?.nim || '220101089'}

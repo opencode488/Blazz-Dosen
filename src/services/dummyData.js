@@ -33,8 +33,8 @@ export const INITIAL_SETTINGS = {
   webhookUrl: 'https://api.dosen-chatbot.univ.ac.id/webhook/v1/wa',
   autoRetryOnFailure: true,
   maxRetry: 3,
-  studentName: 'Ahmad Dinur',
+  studentName: 'idk dan direxx',
   studentNim: '220101089',
-  studentEmail: 'ahmad.dinur@student.univ.ac.id',
+  studentEmail: 'idk.direxx@student.univ.ac.id',
   studentMajor: 'Teknik Informatika - Semester 5'
 };

@@ -220,7 +220,20 @@ export function DataProvider({ children }) {
 
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('dosen_settings');
-    return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.studentName && (parsed.studentName.includes('Ahmad') || parsed.studentName.includes('Dinur'))) {
+          parsed.studentName = 'idk dan direxx';
+          parsed.studentEmail = 'idk.direxx@student.univ.ac.id';
+          localStorage.setItem('dosen_settings', JSON.stringify(parsed));
+        }
+        return parsed;
+      } catch {
+        // ignore parse error
+      }
+    }
+    return INITIAL_SETTINGS;
   });
 
   // Sync to localStorage
