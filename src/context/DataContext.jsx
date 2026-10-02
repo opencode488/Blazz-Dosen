@@ -8,7 +8,7 @@ import {
   INITIAL_CHAT_HISTORY,
   INITIAL_SETTINGS
 } from '../services/dummyData';
-import { calculateHMinusOne, formatIndonesianDate, formatScheduledTimestamp } from '../utils/dateUtils';
+import { calculateHMinusOne, formatIndonesianDate, formatScheduledTimestamp, getDayNameFromDate } from '../utils/dateUtils';
 import { normalizePhoneNumber } from '../utils/phoneUtils';
 import {
   getSupabase,
@@ -536,17 +536,93 @@ export function DataProvider({ children }) {
   // --- AUTO CHAT HELPER ---
   const generateMessageBody = (lecturer, course, schedule) => {
     const formattedDate = formatIndonesianDate(schedule.date);
-    return `Selamat pagi, ${lecturer?.name || 'Bapak/Ibu'}${lecturer?.title ? ', ' + lecturer.title : ''}. Mohon izin mengingatkan bahwa pada ${formattedDate} terdapat perkuliahan ${course?.name || 'Mata Kuliah'} pada pukul ${schedule.startTime} - ${schedule.endTime} di ${schedule.room}. Apakah perkuliahan tetap dilaksanakan sesuai jadwal? Terima kasih banyak.`;
+    const meetingText = schedule.meetingNumber ? ` (Pertemuan ${schedule.meetingNumber})` : '';
+    return `Selamat pagi, ${lecturer?.name || 'Bapak/Ibu'}${lecturer?.title ? ', ' + lecturer.title : ''}. Mohon izin mengingatkan bahwa pada ${formattedDate} terdapat perkuliahan ${course?.name || 'Mata Kuliah'}${meetingText} pada pukul ${schedule.startTime} - ${schedule.endTime} di ${schedule.room}. Apakah perkuliahan tetap dilaksanakan sesuai jadwal? Terima kasih banyak.`;
   };
 
   // --- SCHEDULE ACTIONS ---
   const addSchedule = async (data) => {
+    // If user selected recurring weekly with multiple dates (e.g. 14 meetings for semester)
+    if (data.scheduleType === 'weekly' && Array.isArray(data.weeklyDates) && data.weeklyDates.length > 1) {
+      const groupId = 'grp-' + Date.now();
+      const newSchedules = [];
+      const newAutomations = [];
+      const lec = lecturers.find((l) => l.id === data.lecturerId);
+      const crs = courses.find((c) => c.id === data.courseId);
+
+      data.weeklyDates.forEach((meetingDate, idx) => {
+        const meetingNumber = idx + 1;
+        const totalMeetings = data.weeklyDates.length;
+        const schId = `sch-${Date.now()}-${meetingNumber}`;
+        const scheduledAt = data.autoChat ? calculateHMinusOne(meetingDate, '08:00') : null;
+
+        const schObj = {
+          ...data,
+          id: schId,
+          date: meetingDate,
+          dayOfWeek: data.dayOfWeek || getDayNameFromDate(meetingDate),
+          recurringGroupId: groupId,
+          meetingNumber,
+          totalMeetings,
+          autoChat: Boolean(data.autoChat),
+          scheduledAt,
+          status: data.autoChat ? 'scheduled' : 'inactive',
+          notes: data.notes 
+            ? `${data.notes} (Pertemuan ${meetingNumber})` 
+            : `Pertemuan ${meetingNumber} dari ${totalMeetings}`
+        };
+        newSchedules.push(schObj);
+
+        if (schObj.autoChat) {
+          const msgBody = generateMessageBody(lec, crs, schObj);
+          newAutomations.push({
+            id: `msg-${Date.now()}-${meetingNumber}`,
+            scheduleId: schId,
+            lecturerId: data.lecturerId,
+            courseId: data.courseId,
+            phoneNumber: lec?.phone || '',
+            message: msgBody,
+            scheduledAt,
+            sentAt: null,
+            status: 'scheduled',
+            providerMessageId: `wam_msg_${Date.now()}_${meetingNumber}`,
+            errorMessage: null,
+            createdAt: new Date().toISOString()
+          });
+        }
+      });
+
+      setSchedules((prev) => [...newSchedules, ...prev]);
+      if (newAutomations.length > 0) {
+        setAutomations((prev) => [...newAutomations, ...prev]);
+      }
+
+      addToast(`Jadwal semester berhasil dibuat: ${newSchedules.length} pertemuan setiap hari ${data.dayOfWeek || 'minggu'} dengan pengingat otomatis.`);
+
+      const client = getSupabase();
+      if (client && isSupabaseConfigured()) {
+        try {
+          await client.from('schedules').insert(newSchedules.map(mapScheduleToDb));
+          if (newAutomations.length > 0) {
+            await client.from('scheduled_messages').insert(newAutomations.map(mapAutomationToDb));
+          }
+        } catch (err) {
+          console.error('Supabase batch addSchedule error:', err);
+        }
+      }
+
+      return newSchedules[0];
+    }
+
+    // Single schedule creation (or 1 session)
     const newId = 'sch-' + Date.now();
     const scheduledAt = data.autoChat ? calculateHMinusOne(data.date, '08:00') : null;
+    const dayOfWeek = data.dayOfWeek || getDayNameFromDate(data.date);
 
     const newSchedule = {
       ...data,
       id: newId,
+      dayOfWeek,
       autoChat: Boolean(data.autoChat),
       scheduledAt,
       status: data.autoChat ? 'scheduled' : 'inactive'
@@ -597,14 +673,75 @@ export function DataProvider({ children }) {
     return newSchedule;
   };
 
-  const updateSchedule = async (id, data) => {
+  const updateSchedule = async (id, data, applyToAllRecurring = false) => {
     const scheduledAt = data.autoChat ? calculateHMinusOne(data.date, '08:00') : null;
+    const targetSchedule = schedules.find((s) => s.id === id);
+    const recurringGroupId = targetSchedule?.recurringGroupId;
+
+    if (applyToAllRecurring && recurringGroupId) {
+      // Update all schedules in this recurring group for common attributes (time, room, lecturer, course, autoChat)
+      const affectedIds = [];
+      setSchedules((prev) =>
+        prev.map((sch) => {
+          if (sch.recurringGroupId === recurringGroupId) {
+            affectedIds.push(sch.id);
+            const schScheduledAt = data.autoChat ? calculateHMinusOne(sch.date, '08:00') : null;
+            return {
+              ...sch,
+              courseId: data.courseId,
+              lecturerId: data.lecturerId,
+              startTime: data.startTime,
+              endTime: data.endTime,
+              room: data.room,
+              autoChat: Boolean(data.autoChat),
+              scheduledAt: schScheduledAt
+            };
+          }
+          return sch;
+        })
+      );
+
+      // Update automations
+      setAutomations((prev) => {
+        const lec = lecturers.find((l) => l.id === data.lecturerId);
+        const crs = courses.find((c) => c.id === data.courseId);
+
+        return prev.map((a) => {
+          if (affectedIds.includes(a.scheduleId)) {
+            const sch = schedules.find((s) => s.id === a.scheduleId);
+            const schScheduledAt = data.autoChat ? calculateHMinusOne(sch?.date || a.scheduledAt, '08:00') : null;
+            const msgBody = generateMessageBody(lec, crs, { ...(sch || {}), ...data });
+
+            return {
+              ...a,
+              lecturerId: data.lecturerId,
+              courseId: data.courseId,
+              phoneNumber: lec?.phone || a.phoneNumber,
+              scheduledAt: schScheduledAt,
+              message: msgBody,
+              status: data.autoChat ? (a.status === 'sent' ? 'sent' : 'scheduled') : 'cancelled'
+            };
+          }
+          return a;
+        });
+      });
+
+      addToast(`Seluruh (${affectedIds.length}) pertemuan rutin perkuliahan berhasil diperbarui.`);
+      return;
+    }
+
     let updatedSchedule = null;
 
     setSchedules((prev) =>
       prev.map((sch) => {
         if (sch.id === id) {
-          updatedSchedule = { ...sch, ...data, autoChat: Boolean(data.autoChat), scheduledAt };
+          updatedSchedule = { 
+            ...sch, 
+            ...data, 
+            dayOfWeek: data.dayOfWeek || getDayNameFromDate(data.date),
+            autoChat: Boolean(data.autoChat), 
+            scheduledAt 
+          };
           return updatedSchedule;
         }
         return sch;
@@ -698,7 +835,33 @@ export function DataProvider({ children }) {
     }
   };
 
-  const deleteSchedule = async (id) => {
+  const deleteSchedule = async (id, deleteAllRecurring = false) => {
+    const target = schedules.find((s) => s.id === id);
+    const groupId = target?.recurringGroupId;
+
+    if (deleteAllRecurring && groupId) {
+      const idsToDelete = schedules.filter((s) => s.recurringGroupId === groupId).map((s) => s.id);
+      setSchedules((prev) => prev.filter((s) => s.recurringGroupId !== groupId));
+      setAutomations((prev) =>
+        prev.map((a) =>
+          idsToDelete.includes(a.scheduleId) && a.status === 'scheduled'
+            ? { ...a, status: 'cancelled' }
+            : a
+        )
+      );
+      addToast(`Seluruh rangkaian (${idsToDelete.length} pertemuan) jadwal perkuliahan berhasil dihapus.`);
+
+      const client = getSupabase();
+      if (client && isSupabaseConfigured()) {
+        try {
+          await client.from('schedules').delete().in('id', idsToDelete);
+        } catch (err) {
+          console.error('Supabase deleteSchedule recurring error:', err);
+        }
+      }
+      return;
+    }
+
     setSchedules((prev) => prev.filter((s) => s.id !== id));
     setAutomations((prev) =>
       prev.map((a) =>

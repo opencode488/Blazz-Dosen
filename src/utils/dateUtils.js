@@ -89,3 +89,57 @@ export function isToday(dateString) {
     today.getDate() === target.getDate()
   );
 }
+
+export const DAYS_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+export function getDayNameFromDate(dateString) {
+  if (!dateString) return '';
+  const [year, month, day] = dateString.split('-').map(Number);
+  if (!year || !month || !day) return '';
+  const date = new Date(year, month - 1, day);
+  if (isNaN(date.getTime())) return '';
+  return DAYS_ID[date.getDay()];
+}
+
+export function getNextDateForDay(dayName, fromDateString = null) {
+  const targetDayIdx = DAYS_ID.indexOf(dayName);
+  if (targetDayIdx === -1) return new Date().toISOString().split('T')[0];
+
+  let baseDate;
+  if (fromDateString) {
+    const [y, m, d] = fromDateString.split('-').map(Number);
+    baseDate = new Date(y, m - 1, d);
+  } else {
+    baseDate = new Date();
+  }
+
+  const currentDayIdx = baseDate.getDay();
+  let diff = targetDayIdx - currentDayIdx;
+  if (diff < 0) {
+    diff += 7;
+  }
+
+  const targetDate = new Date(baseDate);
+  targetDate.setDate(targetDate.getDate() + diff);
+
+  const y = targetDate.getFullYear();
+  const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+  const d = String(targetDate.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+export function generateWeeklyDates(startDateString, count = 14) {
+  const dates = [];
+  const [y, m, d] = startDateString.split('-').map(Number);
+  const base = new Date(y, m - 1, d);
+
+  for (let i = 0; i < count; i++) {
+    const nextDate = new Date(base);
+    nextDate.setDate(base.getDate() + (i * 7));
+    const year = nextDate.getFullYear();
+    const month = String(nextDate.getMonth() + 1).padStart(2, '0');
+    const day = String(nextDate.getDate()).padStart(2, '0');
+    dates.push(`${year}-${month}-${day}`);
+  }
+  return dates;
+}

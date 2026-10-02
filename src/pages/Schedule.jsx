@@ -16,13 +16,14 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  ClockAlert
+  ClockAlert,
+  Repeat
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import ScheduleModal from '../components/schedule/ScheduleModal';
-import { formatIndonesianDate, formatShortDate } from '../utils/dateUtils';
+import { formatIndonesianDate, formatShortDate, getDayNameFromDate } from '../utils/dateUtils';
 
 export default function Schedule() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function Schedule() {
   // Filters state
   const [filterLecturer, setFilterLecturer] = useState('');
   const [filterCourse, setFilterCourse] = useState('');
+  const [filterDay, setFilterDay] = useState('');
   const [filterAutoChat, setFilterAutoChat] = useState('all'); // 'all' | 'true' | 'false'
   const [filterDate, setFilterDate] = useState('');
 
@@ -60,16 +62,20 @@ export default function Schedule() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id, title) => {
+  const handleDelete = (sch, title) => {
+    const isRecurring = Boolean(sch.recurringGroupId);
     openConfirm({
-      title: 'Hapus Jadwal Kuliah',
-      message: 'Apakah Anda yakin ingin menghapus jadwal perkuliahan ini dari kalender dan database?',
-      itemName: title,
+      title: isRecurring ? 'Hapus Jadwal Kuliah Rutin' : 'Hapus Jadwal Kuliah',
+      message: isRecurring 
+        ? `Mata kuliah ini merupakan bagian dari jadwal rutin semester. Apakah Anda ingin menghapus sesi tanggal ini saja atau seluruh rangkaian perkuliahan?`
+        : 'Apakah Anda yakin ingin menghapus jadwal perkuliahan ini dari kalender dan database?',
+      itemName: `${title} (${sch.meetingNumber ? 'Pertemuan ' + sch.meetingNumber : formatShortDate(sch.date)})`,
       note: 'Pesan otomatis pengingat WhatsApp terkait juga akan dibatalkan.',
-      confirmText: 'Hapus Jadwal',
-      cancelText: 'Batal',
+      confirmText: isRecurring ? 'Hapus Seluruh Pertemuan' : 'Hapus Jadwal',
+      cancelText: isRecurring ? 'Hanya Sesi Ini' : 'Batal',
       variant: 'danger',
-      onConfirm: () => deleteSchedule(id)
+      onConfirm: () => deleteSchedule(sch.id, isRecurring),
+      onCancel: isRecurring ? () => deleteSchedule(sch.id, false) : undefined
     });
   };
 
@@ -77,6 +83,7 @@ export default function Schedule() {
   const filteredSchedules = schedules.filter((sch) => {
     if (filterLecturer && sch.lecturerId !== filterLecturer) return false;
     if (filterCourse && sch.courseId !== filterCourse) return false;
+    if (filterDay && (sch.dayOfWeek ? sch.dayOfWeek !== filterDay : getDayNameFromDate(sch.date) !== filterDay)) return false;
     if (filterDate && sch.date !== filterDate) return false;
     if (filterAutoChat === 'true' && !sch.autoChat) return false;
     if (filterAutoChat === 'false' && sch.autoChat) return false;
@@ -149,6 +156,19 @@ export default function Schedule() {
             </select>
 
             <select
+              value={filterDay}
+              onChange={(e) => setFilterDay(e.target.value)}
+              className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500 font-semibold"
+            >
+              <option value="">Semua Hari</option>
+              {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map((day) => (
+                <option key={day} value={day}>
+                  Hari {day}
+                </option>
+              ))}
+            </select>
+
+            <select
               value={filterAutoChat}
               onChange={(e) => setFilterAutoChat(e.target.value)}
               className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
@@ -165,11 +185,12 @@ export default function Schedule() {
               className="w-full sm:w-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs px-2.5 sm:px-3 py-1.5 sm:py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
             />
 
-            {(filterCourse || filterLecturer || filterDate || filterAutoChat !== 'all') && (
+            {(filterCourse || filterLecturer || filterDay || filterDate || filterAutoChat !== 'all') && (
               <button
                 onClick={() => {
                   setFilterCourse('');
                   setFilterLecturer('');
+                  setFilterDay('');
                   setFilterDate('');
                   setFilterAutoChat('all');
                 }}
@@ -256,8 +277,18 @@ export default function Schedule() {
                   return (
                     <tr key={sch.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
                       <td className="py-3 sm:py-4 px-3 sm:px-6">
-                        <div className="font-bold text-slate-900 dark:text-white leading-tight text-xs sm:text-base">
-                          {crs?.name || 'Mata Kuliah'}
+                        <div className="font-bold text-slate-900 dark:text-white leading-tight text-xs sm:text-base flex items-center gap-1.5 flex-wrap">
+                          <span>{crs?.name || 'Mata Kuliah'}</span>
+                          {sch.meetingNumber && (
+                            <span className="text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-200/50 dark:border-indigo-800/50">
+                              Pertemuan {sch.meetingNumber}
+                            </span>
+                          )}
+                          {sch.recurringGroupId && (
+                            <span title="Jadwal Rutin Mingguan" className="text-indigo-500">
+                              <Repeat className="w-3 h-3 inline" />
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono mt-0.5">
                           {crs?.code}
@@ -279,8 +310,8 @@ export default function Schedule() {
                         </div>
                       </td>
                       <td className="hidden sm:table-cell py-4 px-4 text-xs font-medium text-slate-700 dark:text-slate-300">
-                        <div>{formatIndonesianDate(sch.date)}</div>
-                        <div className="text-slate-500 font-semibold">{sch.startTime} - {sch.endTime}</div>
+                        <div className="font-semibold text-slate-900 dark:text-white">{formatIndonesianDate(sch.date)}</div>
+                        <div className="text-slate-500 font-semibold">{sch.startTime} - {sch.endTime} WIB</div>
                       </td>
                       <td className="hidden md:table-cell py-4 px-4 text-xs text-slate-600 dark:text-slate-300">
                         <span className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
@@ -328,7 +359,7 @@ export default function Schedule() {
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(sch.id, crs?.name || 'jadwal')}
+                            onClick={() => handleDelete(sch, crs?.name || 'jadwal')}
                             title="Hapus"
                             className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition cursor-pointer"
                           >
@@ -356,9 +387,21 @@ export default function Schedule() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 px-2 py-0.5 rounded">
-                      {crs?.code}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/70 px-2 py-0.5 rounded">
+                        {crs?.code}
+                      </span>
+                      {sch.meetingNumber && (
+                        <span className="text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-200/50 dark:border-indigo-800/50">
+                          P-{sch.meetingNumber}
+                        </span>
+                      )}
+                      {sch.recurringGroupId && (
+                        <span title="Jadwal Rutin Mingguan" className="text-indigo-500">
+                          <Repeat className="w-3 h-3 inline" />
+                        </span>
+                      )}
+                    </div>
                     <Badge variant={sch.autoChat ? 'success' : 'default'} dot={sch.autoChat} size="sm">
                       {sch.autoChat ? 'Auto Chat Aktif' : 'Off'}
                     </Badge>
@@ -374,7 +417,7 @@ export default function Schedule() {
                   <div className="space-y-2 py-3 mt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                       <Calendar className="w-4 h-4 text-indigo-500 shrink-0" />
-                      <span>{formatIndonesianDate(sch.date)}</span>
+                      <span className="font-semibold">{formatIndonesianDate(sch.date)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                       <Clock className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -403,7 +446,7 @@ export default function Schedule() {
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(sch.id, crs?.name || 'jadwal')}
+                      onClick={() => handleDelete(sch, crs?.name || 'jadwal')}
                       className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 transition cursor-pointer"
                       title="Hapus"
                     >

@@ -15,7 +15,8 @@ import {
   XCircle,
   Eye,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Repeat
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import Button from '../components/ui/Button';
@@ -63,16 +64,18 @@ export default function ScheduleDetail() {
   const lecturer = lecturers.find((l) => l.id === schedule.lecturerId);
   const linkedAutomation = automations.find((a) => a.scheduleId === schedule.id);
 
-  const handleDelete = () => {
+  const handleDelete = (deleteAll = false) => {
     openConfirm({
-      title: 'Hapus Jadwal Kuliah',
-      message: 'Hapus jadwal perkuliahan ini dari kalender dan database?',
-      itemName: course?.name,
+      title: deleteAll ? 'Hapus Seluruh Rangkaian Jadwal Rutin' : 'Hapus Jadwal Kuliah',
+      message: deleteAll
+        ? 'Apakah Anda yakin ingin menghapus seluruh sesi pertemuan perkuliahan rutin semester ini dari kalender dan antrean pesan?'
+        : 'Hapus sesi perkuliahan tanggal ini dari kalender dan database?',
+      itemName: `${course?.name}${schedule.meetingNumber ? ' (Pertemuan ' + schedule.meetingNumber + ')' : ''}`,
       note: 'Pesan otomatis pengingat WhatsApp terkait juga akan dibatalkan.',
-      confirmText: 'Ya, Hapus Jadwal',
+      confirmText: deleteAll ? 'Ya, Hapus Semua' : 'Ya, Hapus Sesi Ini',
       variant: 'danger',
       onConfirm: () => {
-        deleteSchedule(schedule.id);
+        deleteSchedule(schedule.id, deleteAll);
         navigate('/schedule');
       }
     });
@@ -105,13 +108,23 @@ export default function ScheduleDetail() {
       <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/50">
                 {course?.code || 'KULIAH'}
               </span>
               <span className="text-xs font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
                 {course?.credits || 3} SKS
               </span>
+              {schedule.meetingNumber && (
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                  Pertemuan {schedule.meetingNumber} {schedule.totalMeetings ? `dari ${schedule.totalMeetings}` : ''}
+                </span>
+              )}
+              {schedule.recurringGroupId && (
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                  <Repeat className="w-3 h-3 text-indigo-500" /> Rutin Mingguan
+                </span>
+              )}
               <Badge variant={schedule.autoChat ? 'success' : 'default'} dot={schedule.autoChat}>
                 {schedule.autoChat ? 'Auto Chat Aktif' : 'Auto Chat Nonaktif'}
               </Badge>
@@ -129,9 +142,20 @@ export default function ScheduleDetail() {
             <Button variant="outline" size="sm" icon={Edit2} onClick={() => setIsEditOpen(true)}>
               Edit
             </Button>
-            <Button variant="danger" size="sm" icon={Trash2} onClick={handleDelete}>
-              Delete
-            </Button>
+            {schedule.recurringGroupId ? (
+              <>
+                <Button variant="outline" size="sm" icon={Trash2} onClick={() => handleDelete(false)}>
+                  Hapus Sesi Ini
+                </Button>
+                <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(true)}>
+                  Hapus Semua Sesi
+                </Button>
+              </>
+            ) : (
+              <Button variant="danger" size="sm" icon={Trash2} onClick={() => handleDelete(false)}>
+                Hapus
+              </Button>
+            )}
           </div>
         </div>
 
